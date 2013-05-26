@@ -12,6 +12,7 @@ CEngine::~CEngine()
 {
 	if(_device)
 		_device->drop();
+	delete _physics;
 }
 
 void CEngine::Init(int wWidth, int wHeight)

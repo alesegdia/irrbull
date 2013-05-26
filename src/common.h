@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
+#include "IGameObject.hpp"
 
 /* FORWARD DECLARING */
 class CGame;
@@ -19,7 +20,8 @@ class CPhysics;
 class CEventReceiver;
 class CEngine;
 class CEntity;
-//class CDebugDraw;
+class CDebugDraw;
+class CEntityController;
 
 /* NAMESPACES & ALIAS */
 using namespace irr;

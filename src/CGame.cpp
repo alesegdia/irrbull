@@ -2,6 +2,7 @@
 #include "CEntity.hpp"
 #include "CEngine.hpp"
 #include "CPhysics.hpp"
+#include "CEntityController.hpp"
 
 CGame::CGame()
 {
@@ -10,7 +11,8 @@ CGame::CGame()
 
 CGame::~CGame()
 {
-
+	_engine->GetPhysics()->ClearObjects();
+	delete _engine;
 }
 
 void CGame::Init()
@@ -69,7 +71,13 @@ void CGame::SetupScene()
 	tmpEntity->GetNode()->setAnimationSpeed(70);
 	tmpEntity->GetNode()->setFrameLoop(22,22);
 	tmpEntity->GetNode()->setLoopMode(true);
+	tmpEntity->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
 	_entities.push_back(tmpEntity);
+
+	/* PLAYER CONTROLLER *******************/
+	IGameObject* entityController = new CEntityController(_engine);
+	(static_cast<CEntityController*>(entityController))->AttachEntity(tmpEntity);
+	_gameObjects.push_back(entityController);
 
 	/* CAMARA ******************************/
 	_camNode = _engine->GetSMgr()->addCameraSceneNode();
@@ -78,11 +86,19 @@ void CGame::SetupScene()
 
 }
 
+void CGame::Start()
+{
+	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
+	{
+		(*it).Start();
+	}
+}
+
 void CGame::Update()
 {
-	for(auto it = _entities.begin(); it != _entities.end(); it++)
+	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
 	{
-		//(*it).Update();
+		(*it).Update();
 	}
 }
 
@@ -90,10 +106,12 @@ void CGame::Run()
 {
 	Init();
 	SetupScene();
+	Start();
 
 	irr::video::SMaterial debugMat;
 	debugMat.Lighting = false;
 
+	// _engine->Update()?
 	u32 then = _engine->GetIrrDevice()->getTimer()->getTime();
 	while(_engine->IsRunning())
 	{
@@ -102,8 +120,10 @@ void CGame::Run()
 		then = now;
 
 		_engine->GetPhysics()->UpdatePhysics(delta);
+		Update();
 		PlaceCamera();
 
+		// _engine->DrawAll()??
 		if(_engine->GetIrrDevice()->isWindowActive())
 		{
 			/* RENDERING */

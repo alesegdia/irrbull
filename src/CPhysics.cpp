@@ -28,12 +28,13 @@ void CPhysics::Init(btScalar gravity)
 					BroadPhase,
 					Solver,
 					CollisionConfiguration);
-	_world->setGravity(btVector3(0,-10.f,0));
+	_world->setGravity(btVector3(0,gravity,0));
 }
 
 void CPhysics::UpdatePhysics(u32 delta)
 {
 	// apply gravity
+
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
 		(*it).applyGravity();

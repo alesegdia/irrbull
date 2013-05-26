@@ -11,6 +11,7 @@ public:
 
 	void Init();
 	void SetupScene();
+	void Start();
 	void Update();
 	void Run();
 	void PlaceCamera();
@@ -21,6 +22,7 @@ private:
 	scene::ICameraSceneNode* _camNode;
 	scene::ILightSceneNode* _light1;
 	boost::ptr_vector<CEntity> _entities;
+	boost::ptr_vector<IGameObject> _gameObjects;
 };
 
 #endif

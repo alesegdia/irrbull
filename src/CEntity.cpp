@@ -9,7 +9,9 @@ CEntity::CEntity()
 
 CEntity::~CEntity()
 {
-
+	delete _mesh;
+	delete _node;
+	delete _rigidBody;
 }
 
 void CEntity::Load(CEngine* engine, const std::string& meshPath,
@@ -49,4 +51,14 @@ void CEntity::AttachCamera(scene::ICameraSceneNode* camNode, const core::vector3
 {
 	camNode->setParent(_node);
 	camNode->setPosition(position);
+}
+
+void CEntity::Start()
+{
+
+}
+
+void CEntity::Update()
+{
+
 }

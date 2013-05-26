@@ -3,11 +3,11 @@
 
 #include "common.h"
 
-class CEntity
+class CEntity : public IGameObject
 {
 public:
 	CEntity();
-	~CEntity();
+	virtual ~CEntity();
 
 	void Load(
 			CEngine* engine,
@@ -22,11 +22,14 @@ public:
 			const core::vector3df& position);
 	btRigidBody* GetRigidBody();
 
-private:
+	/* GAMEOBJECT INTERFACE */
+	void Start();
+	void Update();
+
+protected:
 	scene::IAnimatedMesh *_mesh;
 	scene::IAnimatedMeshSceneNode* _node;
 	btRigidBody* _rigidBody;
-
 };
 
 

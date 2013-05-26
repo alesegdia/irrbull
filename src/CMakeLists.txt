@@ -6,6 +6,8 @@ set(SOURCES
 	CGame.cpp
 	CEventReceiver.hpp
 	CEntity.cpp
+	CEntityController.cpp
+	IGameObject.cpp
 	CDebugDraw.hpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
