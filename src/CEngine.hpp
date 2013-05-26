@@ -6,6 +6,7 @@
 // porque sino no cuela, para hacer el forward declaring,
 // tiene que ser un puntero, sino necesita inicializacion en este file.
 #include "CEventReceiver.hpp"
+#include "CDebugDraw.hpp"
 
 class CEngine
 {
@@ -25,6 +26,7 @@ private:
 	IrrlichtDevice* _device;
 	video::IVideoDriver* _driver;
 	CEventReceiver _receiver;
+	CDebugDraw* _debugDraw;
 	CPhysics* _physics;
 	scene::ISceneManager* _smgr;
 };

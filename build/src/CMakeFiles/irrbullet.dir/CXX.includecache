@@ -6,27 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/razieliyo/Dropbox/irrbullet/src/CEngine.cpp
-CEngine.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CEngine.hpp
-CPhysics.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CPhysics.hpp
-CEventReceiver.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CEventReceiver.hpp
+/home/razieliyo/Dropbox/irrbullet/src/CDebugDraw.hpp
+common.h
+/home/razieliyo/Dropbox/irrbullet/src/common.h
 
 /home/razieliyo/Dropbox/irrbullet/src/CEngine.hpp
 common.h
 /home/razieliyo/Dropbox/irrbullet/src/common.h
 CEventReceiver.hpp
 /home/razieliyo/Dropbox/irrbullet/src/CEventReceiver.hpp
-
-/home/razieliyo/Dropbox/irrbullet/src/CEntity.cpp
-CEntity.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CEntity.hpp
-CEngine.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CEngine.hpp
-CPhysics.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CPhysics.hpp
+CDebugDraw.hpp
+/home/razieliyo/Dropbox/irrbullet/src/CDebugDraw.hpp
 
 /home/razieliyo/Dropbox/irrbullet/src/CEntity.hpp
 common.h
@@ -50,13 +40,11 @@ CPhysics.hpp
 common.h
 /home/razieliyo/Dropbox/irrbullet/src/common.h
 
-/home/razieliyo/Dropbox/irrbullet/src/CPhysics.cpp
-CPhysics.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CPhysics.hpp
-
 /home/razieliyo/Dropbox/irrbullet/src/CPhysics.hpp
 common.h
 /home/razieliyo/Dropbox/irrbullet/src/common.h
+CDebugDraw.hpp
+/home/razieliyo/Dropbox/irrbullet/src/CDebugDraw.hpp
 
 /home/razieliyo/Dropbox/irrbullet/src/common.h
 irrlicht/irrlicht.h
@@ -79,10 +67,6 @@ cmath
 -
 cstring
 -
-
-/home/razieliyo/Dropbox/irrbullet/src/main.cpp
-CGame.hpp
-/home/razieliyo/Dropbox/irrbullet/src/CGame.hpp
 
 /usr/local/include/bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.h
 LinearMath/btVector3.h

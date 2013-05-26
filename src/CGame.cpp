@@ -43,20 +43,28 @@ void CGame::SetupScene()
 			mapTexturePath,
 			btVector3(0,0,0),
 			core::vector3df(1,1,1),
-			new btBoxShape(btVector3(50.f, 1.f, 50.f)));
+			new btBoxShape(btVector3(100.f, 1.f, 100.f)));
 	_entities.push_back(tmpEntity);
 
 	/* PLAYER ******************************/
 	std::string playerMesh("../media/doom/Cyberdemon/Cyber.md2");
 	std::string playerTexture("../media/doom/Cyberdemon/cyber.jpg");
+
 	tmpEntity = new CEntity();
+	btCollisionShape* capsuleShape = new btCapsuleShape(10.f, 20.f);
+	btCompoundShape* compound = new btCompoundShape();
+	btTransform localTrans;
+	localTrans.setIdentity();
+	localTrans.setOrigin(btVector3(0,14,0));
+	compound->addChildShape(localTrans,capsuleShape);
+
 	tmpEntity->Load(
 			_engine,
 			playerMesh,
 			playerTexture,
-			btVector3(0.f, 4.f, 0.f),
+			btVector3(0.f, 1000.f, 0.f),
 			core::vector3df(0.125f,0.125f,0.125f),
-			new btCapsuleShape(40.f, 100.f),
+			compound, //new btCapsuleShape(10.f, 20.f),
 			btScalar(10));
 	tmpEntity->GetNode()->setAnimationSpeed(70);
 	tmpEntity->GetNode()->setFrameLoop(22,22);
@@ -83,6 +91,9 @@ void CGame::Run()
 	Init();
 	SetupScene();
 
+	irr::video::SMaterial debugMat;
+	debugMat.Lighting = false;
+
 	u32 then = _engine->GetIrrDevice()->getTimer()->getTime();
 	while(_engine->IsRunning())
 	{
@@ -98,6 +109,10 @@ void CGame::Run()
 			/* RENDERING */
 			_engine->GetVideoDriver()->beginScene(true, true, video::SColor(64, 67, 74, 255));
 			_engine->GetSMgr()->drawAll();
+
+			_engine->GetVideoDriver()->setMaterial(debugMat);
+			_engine->GetVideoDriver()->setTransform(irr::video::ETS_WORLD, irr::core::IdentityMatrix);
+			_engine->GetPhysics()->DebugDrawWorld();
 			_engine->GetVideoDriver()->endScene();
 		}
 		else

@@ -1,4 +1,5 @@
 #include "CPhysics.hpp"
+#include "CDebugDraw.hpp"
 
 CPhysics::CPhysics()
 {
@@ -106,3 +107,12 @@ btRigidBody* CPhysics::PushObject(
 	return rigidBody;
 }
 
+void CPhysics::SetDebugDraw (CDebugDraw* debugDraw)
+{
+	_world->setDebugDrawer(debugDraw);
+}
+
+void CPhysics::DebugDrawWorld ()
+{
+	_world->debugDrawWorld();
+}

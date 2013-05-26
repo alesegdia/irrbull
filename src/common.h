@@ -19,6 +19,7 @@ class CPhysics;
 class CEventReceiver;
 class CEngine;
 class CEntity;
+//class CDebugDraw;
 
 /* NAMESPACES & ALIAS */
 using namespace irr;

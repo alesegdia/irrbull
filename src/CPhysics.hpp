@@ -2,6 +2,7 @@
 #define __CPHYSICS__
 
 #include "common.h"
+#include "CDebugDraw.hpp"
 
 class CPhysics
 {
@@ -18,6 +19,8 @@ public:
 			btCollisionShape* colShape = NULL,
 			btScalar mass = 0.f);
 	void ClearObjects();
+	void SetDebugDraw(CDebugDraw* debugDraw);
+	void DebugDrawWorld();
 
 
 private:

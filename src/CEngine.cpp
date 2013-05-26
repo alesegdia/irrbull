@@ -1,6 +1,7 @@
 #include "CEngine.hpp"
 #include "CPhysics.hpp"
 #include "CEventReceiver.hpp"
+#include "CDebugDraw.hpp"
 
 CEngine::CEngine()
 {
@@ -18,6 +19,14 @@ void CEngine::Init(int wWidth, int wHeight)
 	_device = createDevice(
 			video::EDT_OPENGL, core::dimension2d<u32>(wWidth, wHeight),
 			16, false, false, false, &_receiver);
+	_debugDraw = new CDebugDraw(_device);
+	_debugDraw->setDebugMode(
+			btIDebugDraw::DBG_DrawWireframe |
+			btIDebugDraw::DBG_DrawAabb |
+			btIDebugDraw::DBG_DrawContactPoints |
+			//btIDebugDraw::DBG_DrawText |
+			//btIDebugDraw::DBG_DrawConstraintLimits |
+			btIDebugDraw::DBG_DrawConstraints);
 
 	if(!_device)
 		exit(EXIT_FAILURE);
@@ -26,6 +35,7 @@ void CEngine::Init(int wWidth, int wHeight)
 	_smgr = _device->getSceneManager();
 	_physics = new CPhysics();
 	_physics->Init(WORLD_GRAVITY);
+	_physics->SetDebugDraw(_debugDraw);
 }
 
 bool CEngine::IsRunning() const

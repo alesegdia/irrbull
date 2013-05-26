@@ -14,6 +14,7 @@ public:
 	void Update();
 	void Run();
 	void PlaceCamera();
+	void DebugDrawWorld();
 
 private:
 	CEngine* _engine;

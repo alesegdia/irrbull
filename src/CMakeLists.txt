@@ -5,7 +5,8 @@ set(SOURCES
 	CPhysics.cpp
 	CGame.cpp
 	CEventReceiver.hpp
-	CEntity.cpp)
+	CEntity.cpp
+	CDebugDraw.hpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
