@@ -20,6 +20,7 @@ public:
 	scene::ISceneManager* GetSMgr();
 	video::IVideoDriver* GetVideoDriver();
 	IrrlichtDevice* GetIrrDevice();
+	CEventReceiver* GetEventReceiver();
 	CPhysics* GetPhysics();
 
 private:

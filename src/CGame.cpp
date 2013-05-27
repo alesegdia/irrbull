@@ -64,14 +64,14 @@ void CGame::SetupScene()
 			_engine,
 			playerMesh,
 			playerTexture,
-			btVector3(0.f, 1000.f, 0.f),
+			btVector3(0.f, 300.f, 0.f),
 			core::vector3df(0.125f,0.125f,0.125f),
 			compound, //new btCapsuleShape(10.f, 20.f),
 			btScalar(10));
 	tmpEntity->GetNode()->setAnimationSpeed(70);
 	tmpEntity->GetNode()->setFrameLoop(22,22);
 	tmpEntity->GetNode()->setLoopMode(true);
-	tmpEntity->GetRigidBody()->setAngularFactor(btVector3(0,1,0));
+	tmpEntity->GetRigidBody()->setAngularFactor(btVector3(0,0,0));
 	_entities.push_back(tmpEntity);
 
 	/* PLAYER CONTROLLER *******************/

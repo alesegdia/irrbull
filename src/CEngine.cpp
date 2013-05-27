@@ -68,3 +68,8 @@ video::IVideoDriver* CEngine::GetVideoDriver()
 {
 	return _driver;
 }
+
+CEventReceiver* CEngine::GetEventReceiver()
+{
+	return &_receiver;
+}
