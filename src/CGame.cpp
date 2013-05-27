@@ -45,7 +45,7 @@ void CGame::SetupScene()
 			mapTexturePath,
 			btVector3(0,0,0),
 			core::vector3df(1,1,1),
-			new btBoxShape(btVector3(100.f, 1.f, 100.f)));
+			new btBoxShape(btVector3(500.f, 1.f, 500.f)));
 	_entities.push_back(tmpEntity);
 
 	/* PLAYER ******************************/

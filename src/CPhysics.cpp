@@ -117,3 +117,8 @@ void CPhysics::DebugDrawWorld ()
 {
 	_world->debugDrawWorld();
 }
+
+btDiscreteDynamicsWorld* CPhysics::GetWorld()
+{
+	return _world;
+}

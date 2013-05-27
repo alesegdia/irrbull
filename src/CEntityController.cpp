@@ -1,6 +1,7 @@
 #include "CEntityController.hpp"
 #include "CEntity.hpp"
 #include "CEngine.hpp"
+#include "CPhysics.hpp"
 
 CEntityController::CEntityController(CEngine* engine)
 {
@@ -26,11 +27,28 @@ void CEntityController::Update()
 {
 	btRigidBody *rb = _attachedEntity->GetRigidBody();
 
+	// state params
+	EState prevState = _state;
+	bool keyPress = false;
+
+	// movement params
+	f32 factor = 10.f;
+	f32 damping = 0.9f;
+	btVector3 sideStepLinearVel(0,0,0);
+	btVector3 frontStepLinearVel(0,0,0);
+
+	// ground raycast
+	btVector3 start = rb->getCenterOfMassPosition();
+	btVector3 end = start - btVector3(0,8,0);
+	btCollisionWorld::ClosestRayResultCallback rayCallback(start, end);
+	_engine->GetPhysics()->GetWorld()->rayTest(start, end, rayCallback);
+
 	// JUMP
-	if(_engine->IsKeyDown(irr::KEY_SPACE) &&
-		rb->getLinearVelocity().getY() < 0.01f)
+	if(_engine->IsKeyDown(irr::KEY_SPACE) && rayCallback.hasHit())
 	{
 		_attachedEntity->GetRigidBody()->activate(true);
+		_attachedEntity->GetRigidBody()->clearForces();
+		_attachedEntity->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
 		_attachedEntity->GetRigidBody()->applyCentralForce(btVector3(0.f,50000.f,0.f));
 	}
 
@@ -46,42 +64,72 @@ void CEntityController::Update()
 	// if(delta != lastDelta) do it! else idle...
 	_engine->GetIrrDevice()->getCursorControl()->setPosition(100,100);
 	rb->setAngularVelocity(btVector3(0,deltaMouseX*0.1,0));
-	/*  
+
 	if(_engine->IsKeyDown(irr::KEY_KEY_D))
 	{
-		rb->activate(true);
-		rb->setAngularVelocity(btVector3(0,deltaMouseX,0));
-		//rb->applyTorque(btVector3(0,100,0));
+		sideStepLinearVel.setX( (forward.getX()) * factor);
+		sideStepLinearVel.setY(0);
+		sideStepLinearVel.setZ(-(forward.getZ()) * factor);
+		keyPress = true;
 	}
 	else if(_engine->IsKeyDown(irr::KEY_KEY_A))
 	{
-		rb->activate(true);
-		rb->setAngularVelocity(btVector3(0,-1,0));
-		//rb->applyTorque(btVector3(-100,-100,0));
+		sideStepLinearVel.setX(-(forward.getX()) * factor);
+		sideStepLinearVel.setY(0);
+		sideStepLinearVel.setZ( (forward.getZ()) * factor);
+		keyPress = true;
 	}
-	else
-	{
-		rb->setAngularVelocity(btVector3(0,0,0));
-	}
-	*/
-
-	std::cout << rb->getOrientation().getAngle() * core::RADTODEG << std::endl
-		<< rb->getOrientation().getW() << std::endl;
 
 	// MOVEMENT
 	if(_engine->IsKeyDown(irr::KEY_KEY_W))
 	{
-		f32 factor = 30.f;
-
-		rb->activate(true);
-		rb->setLinearVelocity(
-				btVector3(
-					(forward.getZ()) * factor,
-					rb->getLinearVelocity().getY(),
-					(forward.getX()) * factor));
+		frontStepLinearVel.setX((forward.getZ()) * factor);
+		frontStepLinearVel.setY(0);
+		frontStepLinearVel.setZ((forward.getX()) * factor);
+		keyPress = true;
+	}
+	else if (_engine->IsKeyDown(irr::KEY_KEY_S))
+	{
+		frontStepLinearVel.setX(-(forward.getZ()) * factor);
+		frontStepLinearVel.setY(0);
+		frontStepLinearVel.setZ(-(forward.getX()) * factor);
+		keyPress = true;
 	}
 	else
 	{
-		//setLinearVelocity(0)? setDamping(?)?
+		rb->setLinearVelocity(rb->getLinearVelocity() * btVector3(damping,1,damping));
+	}
+
+	_state = EState::IDLE;
+	if(keyPress)
+	{
+		_state = EState::MOVING;
+		rb->setLinearVelocity(
+				btVector3(
+					(frontStepLinearVel.getX() + sideStepLinearVel.getX()) * factor,
+					rb->getLinearVelocity().getY(),
+					(frontStepLinearVel.getZ() + sideStepLinearVel.getZ()) * factor));
+	}
+
+	if(!rayCallback.hasHit())
+		_state = EState::JUMPING;
+
+	scene::IAnimatedMeshSceneNode* node = _attachedEntity->GetNode();
+	switch(_state)
+	{
+		case EState::IDLE:
+			if(prevState != _state)
+				node->setFrameLoop(22,22);
+			break;
+
+		case EState::JUMPING:
+			if(prevState != _state)
+				node->setFrameLoop(50,50);
+			break;
+
+		case EState::MOVING:
+			if(prevState != _state)
+				node->setFrameLoop(4,39);
+			break;
 	}
 }

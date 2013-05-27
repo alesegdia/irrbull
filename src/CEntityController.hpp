@@ -3,6 +3,13 @@
 
 #include "common.h"
 
+enum class EState
+{
+	IDLE,
+	MOVING,
+	JUMPING
+};
+
 class CEntityController : public IGameObject
 {
 public:
@@ -18,7 +25,7 @@ public:
 private:
 	CEngine* _engine;
 	CEntity* _attachedEntity;
+	EState _state;
 };
-
 
 #endif

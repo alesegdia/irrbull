@@ -21,7 +21,7 @@ public:
 	void ClearObjects();
 	void SetDebugDraw(CDebugDraw* debugDraw);
 	void DebugDrawWorld();
-
+	btDiscreteDynamicsWorld* GetWorld();
 
 private:
 	void UpdateRender(btRigidBody* obj);
