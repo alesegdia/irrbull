@@ -34,7 +34,6 @@ void CPhysics::Init(btScalar gravity)
 void CPhysics::UpdatePhysics(u32 delta)
 {
 	// apply gravity
-
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
 		(*it).applyGravity();
@@ -42,7 +41,8 @@ void CPhysics::UpdatePhysics(u32 delta)
 
 	// simulate
 	btScalar dlt = delta*0.001;
-	_world->stepSimulation(dlt, 60);
+	std::cout << dlt << std::endl;
+	_world->stepSimulation(dlt, 10, btScalar(1.) / btScalar(30.));
 
 	// update irrlicht
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)

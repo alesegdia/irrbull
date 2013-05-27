@@ -37,6 +37,7 @@ void CEngine::Init(int wWidth, int wHeight)
 	_physics = new CPhysics();
 	_physics->Init(WORLD_GRAVITY);
 	_physics->SetDebugDraw(_debugDraw);
+	_receiver.SetIrrDevice(_device);
 }
 
 bool CEngine::IsRunning() const

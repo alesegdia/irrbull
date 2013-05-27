@@ -6,6 +6,7 @@
 CEntityController::CEntityController(CEngine* engine)
 {
 	_engine = engine;
+	_prevMouseXDelta = 0;
 }
 
 CEntityController::~CEntityController()
@@ -49,7 +50,7 @@ void CEntityController::Update()
 		_attachedEntity->GetRigidBody()->activate(true);
 		_attachedEntity->GetRigidBody()->clearForces();
 		_attachedEntity->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
-		_attachedEntity->GetRigidBody()->applyCentralForce(btVector3(0.f,50000.f,0.f));
+		_attachedEntity->GetRigidBody()->applyCentralForce(btVector3(0.f,30000.f,0.f));
 	}
 
 	// get forward
@@ -61,9 +62,14 @@ void CEntityController::Update()
 	// ROTATION
 	// check this, maybe timing issues
 	const s32 deltaMouseX = _engine->GetEventReceiver()->mousePos.X - 100;
+	std::cout << "mousedeltax: " << deltaMouseX << std::endl;
+	if(_prevMouseXDelta != deltaMouseX)
+	{
+		_prevMouseXDelta = deltaMouseX;
+		_engine->GetIrrDevice()->getCursorControl()->setPosition(100,100);
+		rb->setAngularVelocity(btVector3(0,deltaMouseX*0.1,0));
+	}
 	// if(delta != lastDelta) do it! else idle...
-	_engine->GetIrrDevice()->getCursorControl()->setPosition(100,100);
-	rb->setAngularVelocity(btVector3(0,deltaMouseX*0.1,0));
 
 	if(_engine->IsKeyDown(irr::KEY_KEY_D))
 	{

@@ -16,6 +16,15 @@ public:
 	void Run();
 	void PlaceCamera();
 	void DebugDrawWorld();
+	btRigidBody* PushSphere(
+			const core::vector3df& position,
+			f32 radius,
+			btScalar mass);
+
+	btRigidBody* PushCube(
+			const core::vector3df& position,
+			const core::vector3df& scale,
+			btScalar mass);
 
 private:
 	CEngine* _engine;

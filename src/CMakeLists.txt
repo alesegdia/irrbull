@@ -4,7 +4,7 @@ set(SOURCES
 	CEngine.cpp
 	CPhysics.cpp
 	CGame.cpp
-	CEventReceiver.hpp
+	CEventReceiver.cpp
 	CEntity.cpp
 	CEntityController.cpp
 	IGameObject.cpp

@@ -26,6 +26,7 @@ private:
 	CEngine* _engine;
 	CEntity* _attachedEntity;
 	EState _state;
+	s32 _prevMouseXDelta;
 };
 
 #endif
