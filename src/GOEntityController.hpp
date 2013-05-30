@@ -14,13 +14,37 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CGame.hpp"
+#ifndef __GOENTITYCONTROLLER__
+#define __GOENTITYCONTROLLER__
 
-int main ()
+#include "common.h"
+
+enum class EState
 {
-	CGame* g = new CGame();
-	g->Run();
+	IDLE,
+	MOVING,
+	JUMPING
+};
 
-	std::cout << "OLA Q ASE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-	return 0;
-}
+class GOEntityController : public IGameObject
+{
+public:
+	GOEntityController(CEngine* engine);
+	~GOEntityController();
+
+	void AttachEntity(GOEntity* entity);
+
+	/* GAMEOBJECT INTERFACE */
+	void Awake();
+	void Start();
+	void Update();
+	void Unload();
+
+private:
+	CEngine* _engine;
+	GOEntity* _attachedEntity;
+	EState _state;
+	s32 _prevMouseXDelta;
+};
+
+#endif

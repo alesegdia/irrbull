@@ -21,12 +21,22 @@ IGameObject::~IGameObject()
 
 }
 
+void IGameObject::Awake()
+{
+
+}
+
 void IGameObject::Start()
 {
 
 }
 
 void IGameObject::Update()
+{
+
+}
+
+void IGameObject::Unload()
 {
 
 }

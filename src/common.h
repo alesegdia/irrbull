@@ -9,19 +9,23 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <map>
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
 #include "IGameObject.hpp"
 
-/* FORWARD DECLARING */
+/* CORE OBJECTS */
 class CGame;
 class CPhysics;
 class CEventReceiver;
 class CEngine;
-class CEntity;
 class CDebugDraw;
-class CEntityController;
+class CGameObjectManager;	// include header on hpp
+
+/* GAME OBJECTS */
+class GOEntity;
+class GOEntityController;
 
 /* NAMESPACES & ALIAS */
 using namespace irr;

@@ -38,6 +38,7 @@ public:
 	IrrlichtDevice* GetIrrDevice();
 	CEventReceiver* GetEventReceiver();
 	CPhysics* GetPhysics();
+	void CleanUp();
 
 private:
 	IrrlichtDevice* _device;

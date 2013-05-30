@@ -14,13 +14,41 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CGame.hpp"
+#ifndef __CENTITY__
+#define __CENTITY__
 
-int main ()
+#include "common.h"
+
+class GOEntity : public IGameObject
 {
-	CGame* g = new CGame();
-	g->Run();
+public:
+	GOEntity();
+	virtual ~GOEntity();
 
-	std::cout << "OLA Q ASE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-	return 0;
-}
+	void Load(
+			CEngine* engine,
+			const std::string& meshPath,
+			const std::string& texturePath,
+			const btVector3& position=btVector3(0,0,0),
+			const core::vector3df& scale=core::vector3df(1,1,1),
+			btCollisionShape* shape=NULL,
+			btScalar  mass=0);
+	scene::IAnimatedMeshSceneNode* GetNode();
+	void AttachCamera(scene::ICameraSceneNode* camNode,
+			const core::vector3df& position);
+	btRigidBody* GetRigidBody();
+
+	/* GAMEOBJECT INTERFACE */
+	void Awake();
+	void Start();
+	void Update();
+	void Unload();
+
+protected:
+	scene::IAnimatedMesh *_mesh;
+	scene::IAnimatedMeshSceneNode* _node;
+	btRigidBody* _rigidBody;
+};
+
+
+#endif

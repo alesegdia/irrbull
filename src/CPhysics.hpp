@@ -27,6 +27,7 @@ public:
 	~CPhysics();
 
 	void Init(btScalar gravity);
+	void CleanUp();
 	void UpdatePhysics (u32 delta);
 	btRigidBody* PushObject(
 			//scene::ISceneNode* node,
@@ -42,7 +43,8 @@ public:
 private:
 	void UpdateRender(btRigidBody* obj);
 
-	boost::ptr_vector<btRigidBody> _bodies;
+	std::vector<btRigidBody*> _bodies;
+	boost::ptr_vector<btCollisionShape> _shapes;
 
 	/* Bullet stuff */
 	btDiscreteDynamicsWorld* _world;

@@ -24,11 +24,6 @@ CPhysics::CPhysics()
 
 CPhysics::~CPhysics()
 {
-	delete _world;
-	delete Solver;
-	delete Dispatcher;
-	delete BroadPhase;
-	delete CollisionConfiguration;
 }
 
 void CPhysics::Init(btScalar gravity)
@@ -47,23 +42,38 @@ void CPhysics::Init(btScalar gravity)
 	_world->setGravity(btVector3(0,gravity,0));
 }
 
+void CPhysics::CleanUp()
+{
+	std::cout << "del fizix\n";
+	ClearObjects();
+	//_bodies.clear();
+	std::cout << "\nasdasdasd\n";
+	//_shapes.clear();
+
+	delete _world;
+	delete Solver;
+	delete Dispatcher;
+	delete BroadPhase;
+	delete CollisionConfiguration;
+}
+
 void CPhysics::UpdatePhysics(u32 delta)
 {
 	// apply gravity
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
-		(*it).applyGravity();
+		(*it)->applyGravity();
 	}
 
 	// simulate
 	btScalar dlt = delta*0.001;
 	std::cout << dlt << std::endl;
-	_world->stepSimulation(dlt, 10, btScalar(1.) / btScalar(30.));
+	_world->stepSimulation(dlt, 10, (1.f/30.f));
 
 	// update irrlicht
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
-		UpdateRender(&(*it));
+		UpdateRender(*it);
 	}
 }
 
@@ -86,15 +96,44 @@ void CPhysics::UpdateRender(btRigidBody* obj)
 
 void CPhysics::ClearObjects ()
 {
+	std::cout << "clearobjs";
+	/*  
+	std::cout << "haha";
+	std::cout << _world->getNumCollisionObjects()-1 << std::endl;
+	for(int i = _world->getNumCollisionObjects()-1; i>=0; i--)
+	{
+		btCollisionObject* obj = _world->getCollisionObjectArray()[i];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		if(body && body->getMotionState())
+		{
+			delete body->getMotionState();
+		}
+		scene::ISceneNode *node = static_cast<scene::ISceneNode*>(body->getUserPointer());
+		node->remove();
+		_world->removeCollisionObject(obj);
+		_world->removeRigidBody(body);
+		delete obj;
+	}*/
+
+	//for(int i = _bodies.size(); i >= 0; i--)
+	//{
+	//	delete _bodies[i];
+	//}
+	std::cout << "asdfadsfasdf";
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
-		btRigidBody obj = *it;
-		scene::ISceneNode *node = static_cast<scene::ISceneNode*>(obj.getUserPointer());
+		std::cout << "body!";
+		btRigidBody *obj = *it;
+		scene::ISceneNode *node = static_cast<scene::ISceneNode*>(obj->getUserPointer());
 		node->remove();
-		_world->removeRigidBody(&obj);
+		if(obj->getMotionState())
+			delete obj->getMotionState();
+		_world->removeRigidBody(obj);
 	}
 
-	_bodies.clear();
+
+
+	//_bodies.clear();
 }
 
 btRigidBody* CPhysics::PushObject(
@@ -120,6 +159,7 @@ btRigidBody* CPhysics::PushObject(
 		new btRigidBody(mass, motionState, colShape, localInertia);
 	_world->addRigidBody(rigidBody);
 	_bodies.push_back(rigidBody);
+	_shapes.push_back(colShape);
 
 	return rigidBody;
 }

@@ -15,11 +15,12 @@
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CGame.hpp"
-#include "CEntity.hpp"
 #include "CEngine.hpp"
 #include "CPhysics.hpp"
-#include "CEntityController.hpp"
 #include "CEventReceiver.hpp"
+#include "CGameObjectManager.hpp"
+#include "GOEntity.hpp"
+#include "GOEntityController.hpp"
 
 CGame::CGame()
 {
@@ -28,7 +29,6 @@ CGame::CGame()
 
 CGame::~CGame()
 {
-	_engine->GetPhysics()->ClearObjects();
 	delete _engine;
 }
 
@@ -36,16 +36,18 @@ void CGame::Init()
 {
 	_engine = new CEngine();
 	_engine->Init();
+	_goMgr = new CGameObjectManager();
+	_goMgr->SetEngine(_engine);
 }
 
-btRigidBody* CGame::PushSphere(const core::vector3df& position, f32 radius, btScalar mass)
+btRigidBody* CGame::PushSphere(const btVector3& position, f32 radius, btScalar mass)
 {
 	scene::ISceneNode* _cube = _engine->GetSMgr()->addSphereSceneNode(radius);
 	_cube->setMaterialFlag(video::EMF_LIGHTING,1);
 	_cube->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
 	btRigidBody* rb = _engine->GetPhysics()->PushObject(
-			btVector3(position.X, position.Y, position.Z),
+			position,
 			core::vector3df(1,1,1),
 			new btSphereShape(radius),
 			mass);
@@ -53,7 +55,7 @@ btRigidBody* CGame::PushSphere(const core::vector3df& position, f32 radius, btSc
 	return rb;
 }
 
-btRigidBody* CGame::PushCube(const core::vector3df& position, const core::vector3df& scale, btScalar mass)
+btRigidBody* CGame::PushCube(const btVector3& position, const core::vector3df& scale, btScalar mass)
 {
 	scene::ISceneNode* _cube = _engine->GetSMgr()->addCubeSceneNode(1.f);
 	_cube->setScale(scale);
@@ -61,7 +63,7 @@ btRigidBody* CGame::PushCube(const core::vector3df& position, const core::vector
 	_cube->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
 	btRigidBody* rb = _engine->GetPhysics()->PushObject(
-			btVector3(position.X, position.Y, position.Z),
+			position,
 			scale,
 			new btBoxShape(btVector3(scale.X/2, scale.Y/2, scale.Z/2)),
 			mass);
@@ -85,8 +87,8 @@ void CGame::SetupScene()
 	/* MAP *********************************/
 	std::string mapMeshPath("../media/abarba.obj");
 	std::string mapTexturePath("");
-	CEntity* tmpEntity;
-	tmpEntity = new CEntity();
+	GOEntity* tmpEntity;
+	tmpEntity = new GOEntity();
 	tmpEntity->Load(
 			_engine,
 			mapMeshPath,
@@ -94,25 +96,27 @@ void CGame::SetupScene()
 			btVector3(0,0,0),
 			core::vector3df(1,1,1),
 			new btBoxShape(btVector3(500.f, 1.f, 500.f)));
-	_entities.push_back(tmpEntity);
+	_goMgr->RegisterGameObject(tmpEntity, "map");
+	//_entities.push_back(tmpEntity);
 
 	/* PLAYER ******************************/
 	std::string playerMesh("../media/doom/Cyberdemon/Cyber.md2");
 	std::string playerTexture("../media/doom/Cyberdemon/cyber.jpg");
 
-	tmpEntity = new CEntity();
+	tmpEntity = new GOEntity();
 	btCollisionShape* capsuleShape = new btCapsuleShape(10.f, 20.f);
 	btCompoundShape* compound = new btCompoundShape();
 	btTransform localTrans;
 	localTrans.setIdentity();
 	localTrans.setOrigin(btVector3(0,14,0));
 	compound->addChildShape(localTrans,capsuleShape);
+	btVector3 v3(0.f, 300.f, 0.f);
 
 	tmpEntity->Load(
 			_engine,
 			playerMesh,
 			playerTexture,
-			btVector3(0.f, 300.f, 0.f),
+			v3, //btVector3(0.f, 300.f, 0.f),
 			core::vector3df(0.125f,0.125f,0.125f),
 			compound, //new btCapsuleShape(10.f, 20.f),
 			btScalar(10));
@@ -120,26 +124,44 @@ void CGame::SetupScene()
 	tmpEntity->GetNode()->setFrameLoop(22,22);
 	tmpEntity->GetNode()->setLoopMode(true);
 	tmpEntity->GetRigidBody()->setAngularFactor(btVector3(0,0,0));
-	_entities.push_back(tmpEntity);
+	_goMgr->RegisterGameObject(tmpEntity, "player");
+	//_entities.push_back(tmpEntity);
+/* 
+	btVector3 v1(100,200,0);
+	PushSphere(
+		v1,
+		10,
+		50);
+*/
+	PushSphere(
+		btVector3(100,300,0),
+		10,
+		50);
 
 	PushSphere(
-		core::vector3df(100,100,0),
+		btVector3(100,400,0),
+		10,
+		50);
+
+	PushSphere(
+		btVector3(100,500,0),
 		10,
 		50);
 
 	PushCube(
-		core::vector3df(0,100,0),
+		btVector3(0,100,0),
 		core::vector3df(10,10,10),
 		10);
 
 	/* PLAYER CONTROLLER *******************/
-	IGameObject* entityController = new CEntityController(_engine);
-	(static_cast<CEntityController*>(entityController))->AttachEntity(tmpEntity);
-	_gameObjects.push_back(entityController);
+	IGameObject* entityController = new GOEntityController(_engine);
+	(static_cast<GOEntityController*>(entityController))->AttachEntity(tmpEntity);
+	_goMgr->RegisterGameObject(tmpEntity, "playercontroller");
+	//_gameObjects.push_back(entityController);
 
 	/* CAMARA ******************************/
 	_camNode = _engine->GetSMgr()->addCameraSceneNode();
-	_entities[1].AttachCamera(_camNode,
+	(_goMgr->GetGameObjectByTag<GOEntity>("player"))->AttachCamera(_camNode,
 			core::vector3df(-500,250,0));
 			//core::vector3df(-400,200,-200));
 
@@ -147,25 +169,32 @@ void CGame::SetupScene()
 
 void CGame::Start()
 {
+	/*
 	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
 	{
 		(*it).Start();
 	}
+	*/
 }
 
 void CGame::Update()
 {
+	/*
 	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
 	{
 		(*it).Update();
 	}
+	*/
 }
 
 void CGame::Run()
 {
 	Init();
 	SetupScene();
-	Start();
+	_goMgr->Awake();
+	_goMgr->Start();
+	//Start();
+
 
 	irr::video::SMaterial debugMat;
 	debugMat.Lighting = false;
@@ -196,26 +225,32 @@ void CGame::Run()
 		then = now;
 		_engine->GetPhysics()->UpdatePhysics(delta);
 
-		Update();
+		_goMgr->Update();
+		//Update();
 		PlaceCamera();
 
 		//_engine->GetIrrDevice()->getCursorControl()->setPosition(100,100);
 		//Update();
 
 	}
+	_goMgr->Unload();
+	std::cout << "\nolaqase\n";
+	_engine->CleanUp();
+	std::cout << "\ncuentameloqase\n";
 }
 
 // camera->attachTo(PlayerNode);
 // camera->update();
 void CGame::PlaceCamera()
 {
+	GOEntity *target = _goMgr->GetGameObjectByTag<GOEntity>("player");
 	btTransform xform;
-	_entities[1].GetRigidBody()->getMotionState()->getWorldTransform(xform);
+	target->GetRigidBody()->getMotionState()->getWorldTransform(xform);
 	btVector3 forward = xform.getBasis()[2];
 	forward.normalize();
 
 	f32 factor = 25;
-	_camNode->setTarget(_entities[1].GetNode()->getPosition());
+	_camNode->setTarget(target->GetNode()->getPosition());
 	//_camNode->setTarget(
 	//		_entities[1].GetNode()->getPosition()
 	//		+ core::vector3df(

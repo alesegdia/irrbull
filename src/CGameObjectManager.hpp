@@ -14,13 +14,41 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CGame.hpp"
+#ifndef __CGAMEOBJECTMANAGER__
+#define __CGAMEOBJECTMANAGER__
 
-int main ()
+#include "common.h"
+
+class CGameObjectManager
 {
-	CGame* g = new CGame();
-	g->Run();
+public:
+	CGameObjectManager();
+	~CGameObjectManager();
 
-	std::cout << "OLA Q ASE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-	return 0;
-}
+	// another param <bool> updatable?
+	// 2 lists, 1 updatable other nothing
+	void RegisterGameObject(IGameObject* go, const std::string& tag);
+	void DeleteGameObjectById(const std::string& tag);
+
+	void Awake();
+	void Start();
+	void Update();
+	void Unload();
+	void FreeEverything();
+	void SetEngine(CEngine *engine)
+	{
+		_engine = engine;
+	}
+
+	template<class T>
+	T* GetGameObjectByTag(const std::string& tag)
+	{
+		return (static_cast<T*>(_gameObjects[tag]));
+	}
+
+private:
+	std::map<std::string, IGameObject*> _gameObjects;
+	CEngine* _engine;
+};
+
+#endif

@@ -26,9 +26,7 @@ CEngine::CEngine()
 
 CEngine::~CEngine()
 {
-	if(_device)
-		_device->drop();
-	delete _physics;
+
 }
 
 void CEngine::Init(int wWidth, int wHeight)
@@ -36,6 +34,13 @@ void CEngine::Init(int wWidth, int wHeight)
 	_device = createDevice(
 			video::EDT_OPENGL, core::dimension2d<u32>(wWidth, wHeight),
 			16, false, false, false, &_receiver);
+	if(!_device)
+		exit(EXIT_FAILURE);
+
+	_driver = _device->getVideoDriver();
+	_smgr = _device->getSceneManager();
+	_physics = new CPhysics();
+	_physics->Init(WORLD_GRAVITY);
 	_debugDraw = new CDebugDraw(_device);
 	_debugDraw->setDebugMode(
 			btIDebugDraw::DBG_DrawWireframe |
@@ -44,16 +49,18 @@ void CEngine::Init(int wWidth, int wHeight)
 			//btIDebugDraw::DBG_DrawText |
 			//btIDebugDraw::DBG_DrawConstraintLimits |
 			btIDebugDraw::DBG_DrawConstraints);
-
-	if(!_device)
-		exit(EXIT_FAILURE);
-
-	_driver = _device->getVideoDriver();
-	_smgr = _device->getSceneManager();
-	_physics = new CPhysics();
-	_physics->Init(WORLD_GRAVITY);
 	_physics->SetDebugDraw(_debugDraw);
+
 	_receiver.SetIrrDevice(_device);
+}
+
+void CEngine::CleanUp()
+{
+	_physics->CleanUp();
+	if(_device)
+		_device->drop();
+	delete _physics;
+	delete _debugDraw;
 }
 
 bool CEngine::IsRunning() const

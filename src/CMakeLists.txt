@@ -5,8 +5,9 @@ set(SOURCES
 	CPhysics.cpp
 	CGame.cpp
 	CEventReceiver.cpp
-	CEntity.cpp
-	CEntityController.cpp
+	CGameObjectManager.cpp
+	GOEntity.cpp
+	GOEntityController.cpp
 	IGameObject.cpp
 	CDebugDraw.hpp)
 
@@ -37,22 +38,22 @@ if(BULLET_FOUND)
 	include_directories(${BULLET_INCLUDE_DIRS})
 endif()
 
-add_executable(irrbullet ${SOURCES})
+add_executable(irrbull ${SOURCES})
 
 if(Boost_FOUND)
-	target_link_libraries(irrbullet ${Boost_LIBRARIES})
+	target_link_libraries(irrbull ${Boost_LIBRARIES})
 endif()
 
 if(IRRLICHT_FOUND)
-	target_link_libraries(irrbullet ${IRRLICHT_LIBRARIES})
+	target_link_libraries(irrbull ${IRRLICHT_LIBRARIES})
 endif()
 
 if(OPENGL_FOUND)
-	target_link_libraries(irrbullet ${OPENGL_LIBRARIES})
+	target_link_libraries(irrbull ${OPENGL_LIBRARIES})
 endif()
 
 if(BULLET_FOUND)
-	target_link_libraries(irrbullet ${BULLET_LIBRARIES})
+	target_link_libraries(irrbull ${BULLET_LIBRARIES})
 endif()
 
 # Set output

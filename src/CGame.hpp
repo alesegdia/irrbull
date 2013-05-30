@@ -18,6 +18,7 @@
 #define __GAME__
 
 #include "common.h"
+#include "CGameObjectManager.hpp"
 
 class CGame
 {
@@ -33,12 +34,12 @@ public:
 	void PlaceCamera();
 	void DebugDrawWorld();
 	btRigidBody* PushSphere(
-			const core::vector3df& position,
+			const btVector3& position,
 			f32 radius,
 			btScalar mass);
 
 	btRigidBody* PushCube(
-			const core::vector3df& position,
+			const btVector3& position,
 			const core::vector3df& scale,
 			btScalar mass);
 
@@ -46,8 +47,9 @@ private:
 	CEngine* _engine;
 	scene::ICameraSceneNode* _camNode;
 	scene::ILightSceneNode* _light1;
-	boost::ptr_vector<CEntity> _entities;
-	boost::ptr_vector<IGameObject> _gameObjects;
+	CGameObjectManager *_goMgr;
+	//boost::ptr_vector<CEntity> _entities;
+	//boost::ptr_vector<IGameObject> _gameObjects;
 };
 
 #endif

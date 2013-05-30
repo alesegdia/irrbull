@@ -21,8 +21,10 @@ class IGameObject
 {
 public:
 	virtual ~IGameObject()=0;
+	virtual void Awake();
 	virtual void Start();
 	virtual void Update();
+	virtual void Unload();
 };
 
 #endif

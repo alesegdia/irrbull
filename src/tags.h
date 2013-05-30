@@ -14,13 +14,9 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CGame.hpp"
-
-int main ()
+enum class ETag
 {
-	CGame* g = new CGame();
-	g->Run();
+	TCAMERA,
+	TPLAYER,
 
-	std::cout << "OLA Q ASE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-	return 0;
 }
