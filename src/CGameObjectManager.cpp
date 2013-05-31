@@ -52,11 +52,17 @@ void CGameObjectManager::Start()
 void CGameObjectManager::Update()
 {
 	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); ++it)
-		(it->second)->Update();
+		it->second->Update();
 }
 
 void CGameObjectManager::Unload()
 {
 	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); ++it)
-		(it->second)->Unload();
+		it->second->Unload();
+}
+
+void CGameObjectManager::FreeEverything()
+{
+	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); ++it)
+		delete it->second;
 }

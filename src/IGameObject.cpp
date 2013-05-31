@@ -16,6 +16,8 @@
 
 #include "IGameObject.hpp"
 
+#include <iostream>
+
 IGameObject::~IGameObject()
 {
 
@@ -33,7 +35,7 @@ void IGameObject::Start()
 
 void IGameObject::Update()
 {
-
+	std::cout << "update from GO" << std::endl;
 }
 
 void IGameObject::Unload()

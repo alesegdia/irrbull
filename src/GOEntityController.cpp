@@ -38,7 +38,7 @@ void GOEntityController::AttachEntity(GOEntity* entity)
 
 void GOEntityController::Start()
 {
-
+	std::cout << "STARTING!";
 }
 
 void GOEntityController::Awake()
@@ -48,6 +48,7 @@ void GOEntityController::Awake()
 
 void GOEntityController::Update()
 {
+	std::cout << "update!\n";
 	btRigidBody *rb = _attachedEntity->GetRigidBody();
 
 	// state params

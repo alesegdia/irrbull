@@ -73,6 +73,7 @@ btRigidBody* CGame::PushCube(const btVector3& position, const core::vector3df& s
 
 void CGame::SetupScene()
 {
+	IGameObject* go;
 	/* LIGHTS ON! **************************/
 	_light1 =
 		_engine->GetSMgr()->addLightSceneNode(
@@ -156,7 +157,8 @@ void CGame::SetupScene()
 	/* PLAYER CONTROLLER *******************/
 	IGameObject* entityController = new GOEntityController(_engine);
 	(static_cast<GOEntityController*>(entityController))->AttachEntity(tmpEntity);
-	_goMgr->RegisterGameObject(tmpEntity, "playercontroller");
+	_goMgr->RegisterGameObject(entityController, "playercontroller");
+	std::cout << "PLAYER CONTROLLER ADDRESS:" << tmpEntity << std::endl;
 	//_gameObjects.push_back(entityController);
 
 	/* CAMARA ******************************/
@@ -234,9 +236,8 @@ void CGame::Run()
 
 	}
 	_goMgr->Unload();
-	std::cout << "\nolaqase\n";
+	_goMgr->FreeEverything();
 	_engine->CleanUp();
-	std::cout << "\ncuentameloqase\n";
 }
 
 // camera->attachTo(PlayerNode);

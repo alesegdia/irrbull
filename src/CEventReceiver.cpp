@@ -33,6 +33,8 @@ bool CEventReceiver::OnEvent(const SEvent& event)
 {
 	if(event.EventType == irr::EET_KEY_INPUT_EVENT)
 	{
+		if(event.KeyInput.Key == KEY_ESCAPE)
+			_device->closeDevice();
 		KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
 	}
 	else if(event.EventType == irr::EET_MOUSE_INPUT_EVENT)
