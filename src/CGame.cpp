@@ -21,6 +21,7 @@
 #include "CGameObjectManager.hpp"
 #include "GOEntity.hpp"
 #include "GOEntityController.hpp"
+#include "GOCamera.hpp"
 
 CGame::CGame()
 {
@@ -29,24 +30,21 @@ CGame::CGame()
 
 CGame::~CGame()
 {
-	delete _engine;
+
 }
 
 void CGame::Init()
-{
-	_engine = new CEngine();
-	_engine->Init();
+{	engine.Init();
 	_goMgr = new CGameObjectManager();
-	_goMgr->SetEngine(_engine);
 }
 
 btRigidBody* CGame::PushSphere(const btVector3& position, f32 radius, btScalar mass)
 {
-	scene::ISceneNode* _cube = _engine->GetSMgr()->addSphereSceneNode(radius);
+	scene::ISceneNode* _cube = engine.GetSMgr()->addSphereSceneNode(radius);
 	_cube->setMaterialFlag(video::EMF_LIGHTING,1);
 	_cube->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
-	btRigidBody* rb = _engine->GetPhysics()->PushObject(
+	btRigidBody* rb = engine.GetPhysics()->PushObject(
 			position,
 			core::vector3df(1,1,1),
 			new btSphereShape(radius),
@@ -57,12 +55,12 @@ btRigidBody* CGame::PushSphere(const btVector3& position, f32 radius, btScalar m
 
 btRigidBody* CGame::PushCube(const btVector3& position, const core::vector3df& scale, btScalar mass)
 {
-	scene::ISceneNode* _cube = _engine->GetSMgr()->addCubeSceneNode(1.f);
+	scene::ISceneNode* _cube = engine.GetSMgr()->addCubeSceneNode(1.f);
 	_cube->setScale(scale);
 	_cube->setMaterialFlag(video::EMF_LIGHTING,1);
 	_cube->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
-	btRigidBody* rb = _engine->GetPhysics()->PushObject(
+	btRigidBody* rb = engine.GetPhysics()->PushObject(
 			position,
 			scale,
 			new btBoxShape(btVector3(scale.X/2, scale.Y/2, scale.Z/2)),
@@ -73,10 +71,9 @@ btRigidBody* CGame::PushCube(const btVector3& position, const core::vector3df& s
 
 void CGame::SetupScene()
 {
-	IGameObject* go;
 	/* LIGHTS ON! **************************/
 	_light1 =
-		_engine->GetSMgr()->addLightSceneNode(
+		engine.GetSMgr()->addLightSceneNode(
 				0, core::vector3df(1000,1000,0),
 				video::SColorf(0.3f,0.3f,0.3f),
 				1000.f, 1);
@@ -85,55 +82,42 @@ void CGame::SetupScene()
 		_light1->getLightData().Attenuation.set(0.f,1.f/4000.f, 0.f);
 	}
 
+
 	/* MAP *********************************/
-	std::string mapMeshPath("../media/abarba.obj");
-	std::string mapTexturePath("");
-	GOEntity* tmpEntity;
-	tmpEntity = new GOEntity();
-	tmpEntity->Load(
-			_engine,
-			mapMeshPath,
-			mapTexturePath,
-			btVector3(0,0,0),
-			core::vector3df(1,1,1),
+	GOEntity* tmp;
+	tmp = new GOEntity();
+	tmp->Load("../media/abarba.obj", "",
+			btVector3(0,0,0), core::vector3df(1,1,1),
 			new btBoxShape(btVector3(500.f, 1.f, 500.f)));
-	_goMgr->RegisterGameObject(tmpEntity, "map");
-	//_entities.push_back(tmpEntity);
+	_goMgr->RegisterGameObject(tmp, "map");
+
 
 	/* PLAYER ******************************/
-	std::string playerMesh("../media/doom/Cyberdemon/Cyber.md2");
-	std::string playerTexture("../media/doom/Cyberdemon/cyber.jpg");
-
-	tmpEntity = new GOEntity();
+	tmp = new GOEntity();
 	btCollisionShape* capsuleShape = new btCapsuleShape(10.f, 20.f);
 	btCompoundShape* compound = new btCompoundShape();
 	btTransform localTrans;
 	localTrans.setIdentity();
 	localTrans.setOrigin(btVector3(0,14,0));
 	compound->addChildShape(localTrans,capsuleShape);
-	btVector3 v3(0.f, 300.f, 0.f);
-
-	tmpEntity->Load(
-			_engine,
-			playerMesh,
-			playerTexture,
-			v3, //btVector3(0.f, 300.f, 0.f),
+	tmp->Load("../media/doom/Cyberdemon/Cyber.md2",
+			"../media/doom/Cyberdemon/cyber.jpg",
+			btVector3(0.f, 300.f, 0.f),
 			core::vector3df(0.125f,0.125f,0.125f),
-			compound, //new btCapsuleShape(10.f, 20.f),
-			btScalar(10));
-	tmpEntity->GetNode()->setAnimationSpeed(70);
-	tmpEntity->GetNode()->setFrameLoop(22,22);
-	tmpEntity->GetNode()->setLoopMode(true);
-	tmpEntity->GetRigidBody()->setAngularFactor(btVector3(0,0,0));
-	_goMgr->RegisterGameObject(tmpEntity, "player");
-	//_entities.push_back(tmpEntity);
-/* 
-	btVector3 v1(100,200,0);
+			compound, btScalar(10));
+	tmp->GetNode()->setAnimationSpeed(70);
+	tmp->GetNode()->setFrameLoop(22,22);
+	tmp->GetNode()->setLoopMode(true);
+	tmp->GetRigidBody()->setAngularFactor(btVector3(0,0,0));
+	_goMgr->RegisterGameObject(tmp, "player");
+
+
+	/* PLAY OBJECTS **************************/
 	PushSphere(
-		v1,
+		btVector3(100,200,0),
 		10,
 		50);
-*/
+
 	PushSphere(
 		btVector3(100,300,0),
 		10,
@@ -154,39 +138,25 @@ void CGame::SetupScene()
 		core::vector3df(10,10,10),
 		10);
 
+
 	/* PLAYER CONTROLLER *******************/
-	IGameObject* entityController = new GOEntityController(_engine);
-	(static_cast<GOEntityController*>(entityController))->AttachEntity(tmpEntity);
+	IGameObject* entityController = new GOEntityController();
 	_goMgr->RegisterGameObject(entityController, "playercontroller");
-	std::cout << "PLAYER CONTROLLER ADDRESS:" << tmpEntity << std::endl;
-	//_gameObjects.push_back(entityController);
+
 
 	/* CAMARA ******************************/
-	_camNode = _engine->GetSMgr()->addCameraSceneNode();
-	(_goMgr->GetGameObjectByTag<GOEntity>("player"))->AttachCamera(_camNode,
-			core::vector3df(-500,250,0));
-			//core::vector3df(-400,200,-200));
-
+	IGameObject* camera = new GOCamera();
+	_goMgr->RegisterGameObject(camera, "maincamera");
 }
 
-void CGame::Start()
+void CGame::ConnectSlots()
 {
-	/*
-	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
-	{
-		(*it).Start();
-	}
-	*/
-}
+    GOCamera* cam =                  _goMgr->GetGameObjectByTag<GOCamera>          ("maincamera");
+    GOEntityController* controller = _goMgr->GetGameObjectByTag<GOEntityController>("playercontroller");
+    GOEntity* entity =               _goMgr->GetGameObjectByTag<GOEntity>          ("player");
 
-void CGame::Update()
-{
-	/*
-	for(auto it = _gameObjects.begin(); it != _gameObjects.end(); it++)
-	{
-		(*it).Update();
-	}
-	*/
+    controller->AttachCamera(cam);
+    controller->AttachEntity(entity);
 }
 
 void CGame::Run()
@@ -194,6 +164,7 @@ void CGame::Run()
 	Init();
 	SetupScene();
 	_goMgr->Awake();
+	ConnectSlots();
 	_goMgr->Start();
 	//Start();
 
@@ -201,59 +172,36 @@ void CGame::Run()
 	irr::video::SMaterial debugMat;
 	debugMat.Lighting = false;
 
-	// _engine->Update()?
-	u32 then = _engine->GetIrrDevice()->getTimer()->getTime();
-	while(_engine->IsRunning())
+	// engine.Update()?
+	u32 then = engine.GetIrrDevice()->getTimer()->getTime();
+	while(engine.IsRunning())
 	{
-		// _engine->DrawAll()??
-		if(_engine->GetIrrDevice()->isWindowActive())
+		// engine.DrawAll()??
+		if(engine.GetIrrDevice()->isWindowActive())
 		{
 			/* RENDERING */
-			_engine->GetVideoDriver()->beginScene(true, true, video::SColor(64, 67, 74, 255));
-			_engine->GetSMgr()->drawAll();
+			engine.GetVideoDriver()->beginScene(true, true, video::SColor(64, 67, 74, 255));
+			engine.GetSMgr()->drawAll();
 
-			_engine->GetVideoDriver()->setMaterial(debugMat);
-			_engine->GetVideoDriver()->setTransform(irr::video::ETS_WORLD, irr::core::IdentityMatrix);
-			_engine->GetPhysics()->DebugDrawWorld();
-			_engine->GetVideoDriver()->endScene();
+			engine.GetVideoDriver()->setMaterial(debugMat);
+			engine.GetVideoDriver()->setTransform(irr::video::ETS_WORLD, irr::core::IdentityMatrix);
+			engine.GetPhysics()->DebugDrawWorld();
+			engine.GetVideoDriver()->endScene();
 		}
 		else
 		{
-			_engine->GetIrrDevice()->yield();
+			engine.GetIrrDevice()->yield();
 		}
 
-		const u32 now = _engine->GetIrrDevice()->getTimer()->getTime();
+		const u32 now = engine.GetIrrDevice()->getTimer()->getTime();
 		u32 delta = (now-then);
 		then = now;
-		_engine->GetPhysics()->UpdatePhysics(delta);
+		engine.GetPhysics()->UpdatePhysics(delta);
 
 		_goMgr->Update();
-		//Update();
-		PlaceCamera();
-
-		//_engine->GetIrrDevice()->getCursorControl()->setPosition(100,100);
-		//Update();
-
 	}
+
 	_goMgr->Unload();
 	_goMgr->FreeEverything();
-	_engine->CleanUp();
-}
-
-// camera->attachTo(PlayerNode);
-// camera->update();
-void CGame::PlaceCamera()
-{
-	GOEntity *target = _goMgr->GetGameObjectByTag<GOEntity>("player");
-	btTransform xform;
-	target->GetRigidBody()->getMotionState()->getWorldTransform(xform);
-	btVector3 forward = xform.getBasis()[2];
-	forward.normalize();
-
-	f32 factor = 25;
-	_camNode->setTarget(target->GetNode()->getPosition());
-	//_camNode->setTarget(
-	//		_entities[1].GetNode()->getPosition()
-	//		+ core::vector3df(
-	//			forward.getZ()*factor,20,forward.getX()*factor));
+	engine.CleanUp();
 }

@@ -19,6 +19,8 @@
 #include "CEventReceiver.hpp"
 #include "CDebugDraw.hpp"
 
+CEngine engine;
+
 CEngine::CEngine()
 {
 

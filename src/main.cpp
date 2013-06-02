@@ -21,6 +21,5 @@ int main ()
 	CGame* g = new CGame();
 	g->Run();
 
-	std::cout << "OLA Q ASE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 	return 0;
 }

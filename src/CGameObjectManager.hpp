@@ -35,10 +35,6 @@ public:
 	void Update();
 	void Unload();
 	void FreeEverything();
-	void SetEngine(CEngine *engine)
-	{
-		_engine = engine;
-	}
 
 	template<class T>
 	T* GetGameObjectByTag(const std::string& tag)

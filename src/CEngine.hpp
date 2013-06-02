@@ -49,5 +49,5 @@ private:
 	scene::ISceneManager* _smgr;
 };
 
-
+extern CEngine engine;
 #endif

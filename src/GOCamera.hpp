@@ -14,41 +14,29 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __GAME__
-#define __GAME__
+#ifndef __GOCAMERA__
+#define __GOCAMERA__
 
 #include "common.h"
-#include "CGameObjectManager.hpp"
 
-class CGame
+class GOCamera : public IGameObject
 {
 public:
-	CGame();
-	~CGame();
+	GOCamera();
+	~GOCamera();
 
-	void Init();
-	void SetupScene();
-	void ConnectSlots();
-	void Run();
-	void PlaceCamera();
-	void DebugDrawWorld();
-	btRigidBody* PushSphere(
-			const btVector3& position,
-			f32 radius,
-			btScalar mass);
+	void LookAt(const core::vector3df& v);
+	scene::ISceneNode* GetNode();
 
-	btRigidBody* PushCube(
-			const btVector3& position,
-			const core::vector3df& scale,
-			btScalar mass);
+	/* GAMEOBJECT INTERFACE */
+	void Awake();
+	void Start();
+	void Update();
+	void Unload();
 
 private:
-	//CEngine* _engine;
-	scene::ICameraSceneNode* _camNode;
-	scene::ILightSceneNode* _light1;
-	CGameObjectManager *_goMgr;
-	//boost::ptr_vector<CEntity> _entities;
-	//boost::ptr_vector<IGameObject> _gameObjects;
+	scene::ICameraSceneNode* _cam;
+
 };
 
 #endif

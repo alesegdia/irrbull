@@ -26,7 +26,6 @@ public:
 	virtual ~GOEntity();
 
 	void Load(
-			CEngine* engine,
 			const std::string& meshPath,
 			const std::string& texturePath,
 			const btVector3& position=btVector3(0,0,0),

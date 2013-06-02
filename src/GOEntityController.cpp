@@ -15,15 +15,13 @@
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "GOEntityController.hpp"
-#include "GOEntity.hpp"
 #include "CEngine.hpp"
+#include "GOEntity.hpp"
+#include "GOCamera.hpp"
 #include "CPhysics.hpp"
 
-GOEntityController::GOEntityController(CEngine* engine)
+GOEntityController::GOEntityController()
 {
-	_engine = engine;
-	_prevMouseXDelta = 0;
-	_state = EState::IDLE;
 }
 
 GOEntityController::~GOEntityController()
@@ -31,24 +29,31 @@ GOEntityController::~GOEntityController()
 
 }
 
+
 void GOEntityController::AttachEntity(GOEntity* entity)
 {
 	_attachedEntity = entity;
 }
 
-void GOEntityController::Start()
+void GOEntityController::AttachCamera(GOCamera* cam)
 {
-	std::cout << "STARTING!";
+	_attachedCamera = cam;
 }
 
 void GOEntityController::Awake()
 {
+	_prevMouseXDelta = 0;
+	_state = EState::IDLE;
+}
 
+void GOEntityController::Start()
+{
+	_attachedCamera->GetNode()->setParent(_attachedEntity->GetNode());
+	_attachedCamera->GetNode()->setPosition(core::vector3df(-500,250,0));
 }
 
 void GOEntityController::Update()
 {
-	std::cout << "update!\n";
 	btRigidBody *rb = _attachedEntity->GetRigidBody();
 
 	// state params
@@ -65,10 +70,10 @@ void GOEntityController::Update()
 	btVector3 start = rb->getCenterOfMassPosition();
 	btVector3 end = start - btVector3(0,8,0);
 	btCollisionWorld::ClosestRayResultCallback rayCallback(start, end);
-	_engine->GetPhysics()->GetWorld()->rayTest(start, end, rayCallback);
+	engine.GetPhysics()->GetWorld()->rayTest(start, end, rayCallback);
 
 	// JUMP
-	if(_engine->IsKeyDown(irr::KEY_SPACE) && rayCallback.hasHit())
+	if(engine.IsKeyDown(irr::KEY_SPACE) && rayCallback.hasHit())
 	{
 		_attachedEntity->GetRigidBody()->activate(true);
 		_attachedEntity->GetRigidBody()->clearForces();
@@ -84,24 +89,24 @@ void GOEntityController::Update()
 
 	// ROTATION
 	// check this, maybe timing issues
-	const s32 deltaMouseX = _engine->GetEventReceiver()->mousePos.X - 100;
-	std::cout << "mousedeltax: " << deltaMouseX << std::endl;
+	const s32 deltaMouseX = engine.GetEventReceiver()->mousePos.X - 100;
+	//std::cout << "mousedeltax: " << deltaMouseX << std::endl;
 	if(_prevMouseXDelta != deltaMouseX)
 	{
 		_prevMouseXDelta = deltaMouseX;
-		_engine->GetIrrDevice()->getCursorControl()->setPosition(100,100);
+		engine.GetIrrDevice()->getCursorControl()->setPosition(100,100);
 		rb->setAngularVelocity(btVector3(0,deltaMouseX*0.1,0));
 	}
 	// if(delta != lastDelta) do it! else idle...
 
-	if(_engine->IsKeyDown(irr::KEY_KEY_D))
+	if(engine.IsKeyDown(irr::KEY_KEY_D))
 	{
 		sideStepLinearVel.setX( (forward.getX()) * factor);
 		sideStepLinearVel.setY(0);
 		sideStepLinearVel.setZ(-(forward.getZ()) * factor);
 		keyPress = true;
 	}
-	else if(_engine->IsKeyDown(irr::KEY_KEY_A))
+	else if(engine.IsKeyDown(irr::KEY_KEY_A))
 	{
 		sideStepLinearVel.setX(-(forward.getX()) * factor);
 		sideStepLinearVel.setY(0);
@@ -110,14 +115,14 @@ void GOEntityController::Update()
 	}
 
 	// MOVEMENT
-	if(_engine->IsKeyDown(irr::KEY_KEY_W))
+	if(engine.IsKeyDown(irr::KEY_KEY_W))
 	{
 		frontStepLinearVel.setX((forward.getZ()) * factor);
 		frontStepLinearVel.setY(0);
 		frontStepLinearVel.setZ((forward.getX()) * factor);
 		keyPress = true;
 	}
-	else if (_engine->IsKeyDown(irr::KEY_KEY_S))
+	else if (engine.IsKeyDown(irr::KEY_KEY_S))
 	{
 		frontStepLinearVel.setX(-(forward.getZ()) * factor);
 		frontStepLinearVel.setY(0);
@@ -161,6 +166,12 @@ void GOEntityController::Update()
 				node->setFrameLoop(4,39);
 			break;
 	}
+
+	btTransform xform2;
+	_attachedEntity->GetRigidBody()->getMotionState()->getWorldTransform(xform2);
+	btVector3 forward2 = xform2.getBasis()[2];
+	forward2.normalize();
+    _attachedCamera->LookAt(_attachedEntity->GetNode()->getPosition());
 }
 
 void GOEntityController::Unload()

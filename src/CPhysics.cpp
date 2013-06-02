@@ -44,12 +44,7 @@ void CPhysics::Init(btScalar gravity)
 
 void CPhysics::CleanUp()
 {
-	std::cout << "del fizix\n";
 	ClearObjects();
-	//_bodies.clear();
-	std::cout << "\nasdasdasd\n";
-	//_shapes.clear();
-
 	delete _world;
 	delete Solver;
 	delete Dispatcher;
@@ -67,7 +62,6 @@ void CPhysics::UpdatePhysics(u32 delta)
 
 	// simulate
 	btScalar dlt = delta*0.001;
-	std::cout << dlt << std::endl;
 	_world->stepSimulation(dlt, 10, (1.f/30.f));
 
 	// update irrlicht
@@ -96,10 +90,6 @@ void CPhysics::UpdateRender(btRigidBody* obj)
 
 void CPhysics::ClearObjects ()
 {
-	std::cout << "clearobjs";
-	/*  
-	std::cout << "haha";
-	std::cout << _world->getNumCollisionObjects()-1 << std::endl;
 	for(int i = _world->getNumCollisionObjects()-1; i>=0; i--)
 	{
 		btCollisionObject* obj = _world->getCollisionObjectArray()[i];
@@ -113,27 +103,9 @@ void CPhysics::ClearObjects ()
 		_world->removeCollisionObject(obj);
 		_world->removeRigidBody(body);
 		delete obj;
-	}*/
-
-	//for(int i = _bodies.size(); i >= 0; i--)
-	//{
-	//	delete _bodies[i];
-	//}
-	std::cout << "asdfadsfasdf";
-	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
-	{
-		std::cout << "body!";
-		btRigidBody *obj = *it;
-		scene::ISceneNode *node = static_cast<scene::ISceneNode*>(obj->getUserPointer());
-		node->remove();
-		if(obj->getMotionState())
-			delete obj->getMotionState();
-		_world->removeRigidBody(obj);
 	}
 
-
-
-	//_bodies.clear();
+	_bodies.clear();
 }
 
 btRigidBody* CPhysics::PushObject(

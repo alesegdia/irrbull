@@ -29,10 +29,11 @@ enum class EState
 class GOEntityController : public IGameObject
 {
 public:
-	GOEntityController(CEngine* engine);
+	GOEntityController();
 	~GOEntityController();
 
 	void AttachEntity(GOEntity* entity);
+	void AttachCamera(GOCamera* cam);
 
 	/* GAMEOBJECT INTERFACE */
 	void Awake();
@@ -41,8 +42,8 @@ public:
 	void Unload();
 
 private:
-	CEngine* _engine;
 	GOEntity* _attachedEntity;
+	GOCamera* _attachedCamera;
 	EState _state;
 	s32 _prevMouseXDelta;
 };

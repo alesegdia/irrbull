@@ -14,41 +14,46 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __GAME__
-#define __GAME__
+#include "GOCamera.hpp"
+#include "CEngine.hpp"
 
-#include "common.h"
-#include "CGameObjectManager.hpp"
-
-class CGame
+GOCamera::GOCamera()
 {
-public:
-	CGame();
-	~CGame();
 
-	void Init();
-	void SetupScene();
-	void ConnectSlots();
-	void Run();
-	void PlaceCamera();
-	void DebugDrawWorld();
-	btRigidBody* PushSphere(
-			const btVector3& position,
-			f32 radius,
-			btScalar mass);
+}
 
-	btRigidBody* PushCube(
-			const btVector3& position,
-			const core::vector3df& scale,
-			btScalar mass);
+GOCamera::~GOCamera()
+{
 
-private:
-	//CEngine* _engine;
-	scene::ICameraSceneNode* _camNode;
-	scene::ILightSceneNode* _light1;
-	CGameObjectManager *_goMgr;
-	//boost::ptr_vector<CEntity> _entities;
-	//boost::ptr_vector<IGameObject> _gameObjects;
-};
+}
 
-#endif
+void GOCamera::LookAt(const core::vector3df& v)
+{
+	_cam->setTarget(v);
+}
+
+scene::ISceneNode* GOCamera::GetNode()
+{
+	return _cam;
+}
+
+void GOCamera::Awake()
+{
+	_cam = engine.GetSMgr()->addCameraSceneNode();
+}
+
+void GOCamera::Start()
+{
+
+}
+
+void GOCamera::Update()
+{
+
+}
+
+void GOCamera::Unload()
+{
+
+}
+

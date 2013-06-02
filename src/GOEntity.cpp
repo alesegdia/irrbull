@@ -25,23 +25,21 @@ GOEntity::GOEntity()
 
 GOEntity::~GOEntity()
 {
-	//delete _mesh;
-	//delete _node;
-	//delete _rigidBody;
+
 }
 
-void GOEntity::Load(CEngine* engine, const std::string& meshPath,
-		const std::string& texturePath, const btVector3& position,
-		const core::vector3df& scale, btCollisionShape* colShape, btScalar mass)
+void GOEntity::Load(const std::string& meshPath, const std::string& texturePath,
+		const btVector3& position, const core::vector3df& scale,
+		btCollisionShape* colShape, btScalar mass)
 {
-	_mesh = engine->GetSMgr()->getMesh(meshPath.c_str());
+	_mesh = engine.GetSMgr()->getMesh(meshPath.c_str());
 
 	if(!_mesh)
 		exit(EXIT_FAILURE);
 
-	video::IVideoDriver* driver = engine->GetVideoDriver();
+	video::IVideoDriver* driver = engine.GetVideoDriver();
 
-	_node = engine->GetSMgr()->addAnimatedMeshSceneNode(_mesh);
+	_node = engine.GetSMgr()->addAnimatedMeshSceneNode(_mesh);
 	_node->setMaterialFlag(irr::video::EMF_LIGHTING, true);
 
 	if(texturePath != "")
@@ -49,7 +47,7 @@ void GOEntity::Load(CEngine* engine, const std::string& meshPath,
 
 	_node->setScale(scale);
 
-	_rigidBody = engine->GetPhysics()->PushObject(position, scale, colShape, mass);
+	_rigidBody = engine.GetPhysics()->PushObject(position, scale, colShape, mass);
 	_rigidBody->setUserPointer((void*)(_node));
 }
 

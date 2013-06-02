@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstring>
 #include "IGameObject.hpp"
+#include "TSingleton.hpp"
 
 /* CORE OBJECTS */
 class CGame;
@@ -26,6 +27,7 @@ class CGameObjectManager;	// include header on hpp
 /* GAME OBJECTS */
 class GOEntity;
 class GOEntityController;
+class GOCamera;
 
 /* NAMESPACES & ALIAS */
 using namespace irr;
