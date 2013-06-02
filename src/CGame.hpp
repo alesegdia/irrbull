@@ -30,7 +30,6 @@ public:
 	void SetupScene();
 	void ConnectSlots();
 	void Run();
-	void PlaceCamera();
 	void DebugDrawWorld();
 	btRigidBody* PushSphere(
 			const btVector3& position,
@@ -43,12 +42,9 @@ public:
 			btScalar mass);
 
 private:
-	//CEngine* _engine;
 	scene::ICameraSceneNode* _camNode;
 	scene::ILightSceneNode* _light1;
 	CGameObjectManager *_goMgr;
-	//boost::ptr_vector<CEntity> _entities;
-	//boost::ptr_vector<IGameObject> _gameObjects;
 };
 
 #endif
