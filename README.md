@@ -11,3 +11,9 @@
 * Get into /build directory
 * Type cmake .. && make
 * Go to /bin and exec ./irrbullet to launch the app
+
+# LICENSING
+
+* Doom assets are under their respective licenses placed at their own folders.
+* Code is under GPL license.
+
