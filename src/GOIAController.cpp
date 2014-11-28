@@ -53,7 +53,7 @@ void GOIAController::Update()
     direccion.normalize();
     f32 cos_angulo = direccion.dot(forward);
     f32 sin_angulo = sin(acos(cos_angulo));
-    std::cout << "acos(" << cos_angulo << ") = " << acos(cos_angulo) * core::RADTODEG << std::endl;
+    // std::cout << "acos(" << cos_angulo << ") = " << acos(cos_angulo) * core::RADTODEG << std::endl;
 
 	f32 delta = 0;
 	f32 factor = 0.01f;

@@ -66,12 +66,10 @@ void CPhysics::UpdatePhysics(u32 delta)
 	_world->stepSimulation(dlt, 10, (1.f/30.f));
 
 	// update irrlicht
-	std::cout << "tutum..." << std::endl;
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
 		UpdateRender(*it);
 	}
-	std::cout << "PSHHH!!" << std::endl;
 }
 
 void CPhysics::UpdateRender(btRigidBody* obj)
@@ -80,7 +78,6 @@ void CPhysics::UpdateRender(btRigidBody* obj)
 
 	// set pos
 	btVector3 point = obj->getCenterOfMassPosition();
-	std::cout << _bodies.size() << ": " << node << std::endl;
 	//std::cout << point[0] << ", " << point[1] << ", " << point[2] << std::endl;
     node->setPosition(core::vector3df((f32)point.getX(),(f32)point.getY(),(f32)point.getZ()));
 
