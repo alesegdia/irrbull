@@ -28,6 +28,7 @@ public:
 
 	void Init(btScalar gravity);
 	void CleanUp();
+	void Pause();
 	void UpdatePhysics (u32 delta);
 	btRigidBody* PushObject(
 			//scene::ISceneNode* node,
@@ -38,6 +39,7 @@ public:
 	void ClearObjects();
 	void SetDebugDraw(CDebugDraw* debugDraw);
 	void DebugDrawWorld();
+	void DeleteEntity(GOEntity* entity);
 	btDiscreteDynamicsWorld* GetWorld();
 
 private:

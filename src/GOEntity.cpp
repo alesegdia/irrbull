@@ -28,6 +28,49 @@ GOEntity::~GOEntity()
 
 }
 
+btTriangleMesh* IrrMeshToBullet (scene::IMesh *mesh)
+{
+	btTriangleMesh* tmesh = new btTriangleMesh;
+	scene::IMeshBuffer* meshbuffer;
+	btVector3 v1, v2, v3;
+	btScalar x, y, z;
+	int count = 0;
+	int cnt = 0;
+	for(int i = 0; i < mesh->getMeshBufferCount(); i++)
+	{
+		meshbuffer = mesh->getMeshBuffer(i);
+		u16* indices = meshbuffer->getIndices();
+		count = 0;
+		for(int j=0; j<meshbuffer->getVertexCount(); j++)
+		{
+			const core::vector3df v = meshbuffer->getPosition(indices[j]);
+			//std::cout << cnt++ << ". " << count << std::endl;
+			if(count == 2)
+			{
+				x=v.X; y=v.Y; z=v.Z;
+				v3 = btVector3(x, y, z);
+				tmesh->addTriangle(v1, v2, v3);
+				count = 0;
+			}
+			else
+			{
+				x=v.X; y=v.Y; z=v.Z;
+				if(count == 0)
+				{
+					v1 = btVector3(x,y,z);
+				}
+				else
+				{
+					v2 = btVector3(x,y,z);
+			    }
+			    count++;
+			}
+		}
+	}
+
+	return tmesh;
+}
+
 void GOEntity::Load(const std::string& meshPath, const std::string& texturePath,
 		const btVector3& position, const core::vector3df& scale,
 		btCollisionShape* colShape, btScalar mass)
@@ -47,8 +90,20 @@ void GOEntity::Load(const std::string& meshPath, const std::string& texturePath,
 
 	_node->setScale(scale);
 
-	_rigidBody = engine.GetPhysics()->PushObject(position, scale, colShape, mass);
+	if(colShape == NULL)
+	{
+	    scene::IMesh* tmpMesh = engine.GetSMgr()->getMesh(meshPath.c_str());
+		btTriangleMesh* tmesh = IrrMeshToBullet(tmpMesh);
+		btBvhTriangleMeshShape* tshape = new btBvhTriangleMeshShape(tmesh, true, true);
+		_rigidBody = engine.GetPhysics()->PushObject(position, scale, tshape, mass);
+	}
+	else
+	{
+	    _rigidBody = engine.GetPhysics()->PushObject(position, scale, colShape, mass);
+    }
 	_rigidBody->setUserPointer((void*)(_node));
+	std::cout << "RigidBody: " << meshPath << ": " << _rigidBody << std::endl;
+	std::cout << "NODE: " << _node << std::endl;
 }
 
 scene::IAnimatedMeshSceneNode* GOEntity::GetNode()
@@ -85,5 +140,5 @@ void GOEntity::Update()
 
 void GOEntity::Unload()
 {
-
+	//engine.GetPhysics()->DeleteEntity(this);
 }

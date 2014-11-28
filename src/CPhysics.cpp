@@ -16,6 +16,7 @@
 
 #include "CPhysics.hpp"
 #include "CDebugDraw.hpp"
+#include "GOEntity.hpp"
 
 CPhysics::CPhysics()
 {
@@ -65,10 +66,12 @@ void CPhysics::UpdatePhysics(u32 delta)
 	_world->stepSimulation(dlt, 10, (1.f/30.f));
 
 	// update irrlicht
+	std::cout << "tutum..." << std::endl;
 	for(auto it = _bodies.begin(); it != _bodies.end(); it++)
 	{
 		UpdateRender(*it);
 	}
+	std::cout << "PSHHH!!" << std::endl;
 }
 
 void CPhysics::UpdateRender(btRigidBody* obj)
@@ -77,7 +80,9 @@ void CPhysics::UpdateRender(btRigidBody* obj)
 
 	// set pos
 	btVector3 point = obj->getCenterOfMassPosition();
-	node->setPosition(core::vector3df((f32)point[0],(f32)point[1],(f32)point[2]));
+	std::cout << _bodies.size() << ": " << node << std::endl;
+	//std::cout << point[0] << ", " << point[1] << ", " << point[2] << std::endl;
+    node->setPosition(core::vector3df((f32)point.getX(),(f32)point.getY(),(f32)point.getZ()));
 
 	// set rot
 	core::vector3df euler;
@@ -86,6 +91,26 @@ void CPhysics::UpdateRender(btRigidBody* obj)
 	q.toEuler(euler);
 	euler *= core::RADTODEG;
 	node->setRotation(euler);
+}
+
+void CPhysics::DeleteEntity(GOEntity* entity)
+{
+	auto it = std::remove(_bodies.begin(), _bodies.end(), entity->GetRigidBody());
+	std::cout << "BEFORE: " << _bodies.size() << std::endl;
+	_bodies.erase(it, _bodies.end());
+	std::cout << "AFTAH: " << _bodies.size() << std::endl;
+	btRigidBody* body = (*it);
+	btCollisionObject* obj = static_cast<btCollisionObject*>(body);
+	if(body && body->getMotionState())
+	{
+		delete body->getMotionState();
+		delete body->getCollisionShape();
+	}
+	scene::ISceneNode *node = static_cast<scene::ISceneNode*>(body->getUserPointer());
+	node->remove();
+	_world->removeCollisionObject(obj);
+	_world->removeRigidBody(body);
+	delete obj;
 }
 
 void CPhysics::ClearObjects ()

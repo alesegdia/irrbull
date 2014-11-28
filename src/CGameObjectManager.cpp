@@ -33,6 +33,9 @@ void CGameObjectManager::RegisterGameObject(IGameObject* go, const std::string& 
 
 void CGameObjectManager::DeleteGameObjectById(const std::string& tag)
 {
+	//IGameObject* toDel = GetGameObjectByTag<IGameObject*>(tag);
+	//toDel->Unload();
+	// engine.GetPhysics()->RemoveBody(toDel->
 	// search on rigidbodies and delete rigidbody
 	// unload gameobject
 }

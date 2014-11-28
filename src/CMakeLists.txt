@@ -8,6 +8,7 @@ set(SOURCES
 	CGameObjectManager.cpp
 	GOEntity.cpp
 	GOEntityController.cpp
+	GOIAController.cpp
 	GOCamera.cpp
 	IGameObject.cpp
 	CDebugDraw.hpp)

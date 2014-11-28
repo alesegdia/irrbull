@@ -22,6 +22,7 @@
 #include "GOEntity.hpp"
 #include "GOEntityController.hpp"
 #include "GOCamera.hpp"
+#include "GOIAController.hpp"
 
 CGame::CGame()
 {
@@ -69,6 +70,10 @@ btRigidBody* CGame::PushCube(const btVector3& position, const core::vector3df& s
 	return rb;
 }
 
+
+
+
+
 void CGame::SetupScene()
 {
 	/* LIGHTS ON! **************************/
@@ -86,9 +91,10 @@ void CGame::SetupScene()
 	/* MAP *********************************/
 	GOEntity* tmp;
 	tmp = new GOEntity();
-	tmp->Load("../media/abarba.obj", "",
-			btVector3(0,0,0), core::vector3df(1,1,1),
-			new btBoxShape(btVector3(500.f, 1.f, 500.f)));
+
+	tmp->Load("../media/abarba.3ds", "",
+			btVector3(0,0,300), core::vector3df(1,1,1),
+			NULL);//new btBoxShape(btVector3(500.f, 1.f, 500.f)));
 	_goMgr->RegisterGameObject(tmp, "map");
 
 
@@ -102,14 +108,38 @@ void CGame::SetupScene()
 	compound->addChildShape(localTrans,capsuleShape);
 	tmp->Load("../media/doom/Cyberdemon/Cyber.md2",
 			"../media/doom/Cyberdemon/cyber.jpg",
-			btVector3(0.f, 300.f, 0.f),
-			core::vector3df(0.125f,0.125f,0.125f),
+			btVector3(0.f, 300.f, 100.f),
+			core::vector3df(0.11f,0.11f,0.11f),
 			compound, btScalar(10));
 	tmp->GetNode()->setAnimationSpeed(70);
 	tmp->GetNode()->setFrameLoop(22,22);
 	tmp->GetNode()->setLoopMode(true);
 	tmp->GetRigidBody()->setAngularFactor(btVector3(0,0,0));
 	_goMgr->RegisterGameObject(tmp, "player");
+
+
+	/* ENEMY ******************************/
+	tmp = new GOEntity();
+	btCollisionShape* capsuleShape2 = new btCapsuleShape(10.f, 20.f);
+	btCompoundShape* compound2 = new btCompoundShape();
+	btTransform localTrans2;
+	localTrans2.setIdentity();
+	localTrans2.setOrigin(btVector3(0,14,0));
+	compound2->addChildShape(localTrans2,capsuleShape2);
+	tmp->Load("../media/revenant/Revenant.md2",
+			"../media/revenant/revenant.jpg",
+			btVector3(0.f, 300.f, 0.f),
+			core::vector3df(0.50f,0.50f,0.50f),
+			compound2, btScalar(10));
+	tmp->GetNode()->setAnimationSpeed(40);
+	tmp->GetNode()->setFrameLoop(12,35);
+	tmp->GetNode()->setLoopMode(true);
+	tmp->GetRigidBody()->setAngularFactor(btVector3(0,0,0));
+	_goMgr->RegisterGameObject(tmp, "enemy");
+
+	/* IA CONTROLLER *************************/
+    GOIAController* iacont = new GOIAController();
+    _goMgr->RegisterGameObject(iacont, "iacontroller");
 
 
 	/* PLAY OBJECTS **************************/
@@ -138,6 +168,10 @@ void CGame::SetupScene()
 		core::vector3df(10,10,10),
 		10);
 
+	PushCube(
+		btVector3(0,0,150),
+		core::vector3df(500,5,500),
+		0);
 
 	/* PLAYER CONTROLLER *******************/
 	IGameObject* entityController = new GOEntityController();
@@ -154,9 +188,13 @@ void CGame::ConnectSlots()
     GOCamera* cam =                  _goMgr->GetGameObjectByTag<GOCamera>          ("maincamera");
     GOEntityController* controller = _goMgr->GetGameObjectByTag<GOEntityController>("playercontroller");
     GOEntity* entity =               _goMgr->GetGameObjectByTag<GOEntity>          ("player");
+    GOIAController* iacont =         _goMgr->GetGameObjectByTag<GOIAController>    ("iacontroller");
+    GOEntity* enemy =                _goMgr->GetGameObjectByTag<GOEntity>          ("enemy");
 
     controller->AttachCamera(cam);
     controller->AttachEntity(entity);
+    iacont->SetPlayer(entity);
+    iacont->SetEntity(enemy);
 }
 
 void CGame::Run()
@@ -171,9 +209,11 @@ void CGame::Run()
 
 	irr::video::SMaterial debugMat;
 	debugMat.Lighting = false;
+	bool pause = false;
 
 	// engine.Update()?
 	u32 then = engine.GetIrrDevice()->getTimer()->getTime();
+	engine.GetIrrDevice()->getCursorControl()->setVisible(false);
 	while(engine.IsRunning())
 	{
 		// engine.DrawAll()??
@@ -196,7 +236,14 @@ void CGame::Run()
 		const u32 now = engine.GetIrrDevice()->getTimer()->getTime();
 		u32 delta = (now-then);
 		then = now;
-		engine.GetPhysics()->UpdatePhysics(delta);
+		if(!pause) engine.GetPhysics()->UpdatePhysics(delta);
+
+		if(engine.GetEventReceiver()->IsKeyDown(KEY_KEY_P))
+		{
+			pause = !pause;
+			//engine.GetPhysics()->pause();
+			//engine.GetPhysics()->DeleteEntity(_goMgr->GetGameObjectByTag<GOEntity>("map"));
+		}
 
 		_goMgr->Update();
 	}

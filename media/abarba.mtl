@@ -1,15 +1,5 @@
 # Blender MTL File: 'abarba.blend'
-# Material Count: 3
-newmtl Material.001
-Ns 96.078431
-Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ni 1.000000
-d 1.000000
-illum 2
-
-
+# Material Count: 2
 newmtl Material.001_IMG_3478.JPG
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -18,7 +8,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/razieliyo/Dropbox/irrbullet/FotosUHU/IMG_3478.JPG
+map_Kd /home/razieliyo/Dropbox/irrbull/FotosUHU/IMG_3478.JPG
 
 
 newmtl White_gloss

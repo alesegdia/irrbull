@@ -8,6 +8,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <iostream>
 #include <memory>
+#include <algorithm>
 #include <vector>
 #include <map>
 #include <cstdlib>
@@ -28,6 +29,7 @@ class CGameObjectManager;	// include header on hpp
 class GOEntity;
 class GOEntityController;
 class GOCamera;
+class GOIAController;
 
 /* NAMESPACES & ALIAS */
 using namespace irr;
