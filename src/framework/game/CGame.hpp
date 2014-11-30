@@ -14,38 +14,36 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __GOENTITYCONTROLLER__
-#define __GOENTITYCONTROLLER__
+#ifndef __GAME__
+#define __GAME__
 
-#include "common.h"
+#include "framework/common.h"
 
-enum class EState
-{
-	IDLE,
-	MOVING,
-	JUMPING
-};
-
-class GOEntityController : public IGameObject
+class CGame
 {
 public:
-	GOEntityController();
-	~GOEntityController();
+	CGame();
+	~CGame();
 
-	void AttachEntity(GOEntity* entity);
-	void AttachCamera(GOCamera* cam);
+	void Init();
+	void SetupScene();
+	void ConnectSlots();
+	void Run();
+	void DebugDrawWorld();
+	btRigidBody* PushSphere(
+			const btVector3& position,
+			f32 radius,
+			btScalar mass);
 
-	/* GAMEOBJECT INTERFACE */
-	void Awake();
-	void Start();
-	void Update();
-	void Unload();
+	btRigidBody* PushCube(
+			const btVector3& position,
+			const core::vector3df& scale,
+			btScalar mass);
 
 private:
-	GOEntity* _attachedEntity;
-	GOCamera* _attachedCamera;
-	EState _state;
-	s32 _prevMouseXDelta;
+	scene::ICameraSceneNode* _camNode;
+	scene::ILightSceneNode* _light1;
+	CGameObjectManager *_goMgr;
 };
 
 #endif

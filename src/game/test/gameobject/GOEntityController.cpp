@@ -14,11 +14,11 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "GOEntityController.hpp"
-#include "CEngine.hpp"
+#include "game/test/gameobject/GOEntityController.hpp"
+#include "framework/CEngine.hpp"
 #include "GOEntity.hpp"
 #include "GOCamera.hpp"
-#include "CPhysics.hpp"
+#include "framework/physics/CPhysics.hpp"
 
 GOEntityController::GOEntityController()
 {

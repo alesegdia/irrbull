@@ -14,30 +14,12 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __GOIACONTROLLER__
-#define __GOIACONTROLLER__
+#include "framework/game/CGame.hpp"
 
-#include "common.h"
-
-class GOIAController : public IGameObject
+int main ()
 {
-public:
-	GOIAController();
-	~GOIAController();
+	CGame* g = new CGame();
+	g->Run();
 
-
-	/* GAMEOBJECT INTERFACE */
-	void Awake();
-	void Start();
-	void Update();
-	void Unload();
-
-	void SetPlayer(GOEntity *player);
-	void SetEntity(GOEntity *entity);
-
-private:
-	GOEntity* _player;
-	GOEntity* _entity;
-};
-
-#endif
+	return 0;
+}

@@ -15,8 +15,8 @@
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "GOEntity.hpp"
-#include "CEngine.hpp"
-#include "CPhysics.hpp"
+#include "framework/CEngine.hpp"
+#include "framework/physics/CPhysics.hpp"
 
 GOEntity::GOEntity()
 {

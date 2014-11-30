@@ -16,7 +16,7 @@
 
 #include "CPhysics.hpp"
 #include "CDebugDraw.hpp"
-#include "GOEntity.hpp"
+#include "game/test/gameobject/GOEntity.hpp"
 
 CPhysics::CPhysics()
 {

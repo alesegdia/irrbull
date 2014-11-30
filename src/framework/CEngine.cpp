@@ -14,10 +14,9 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CEngine.hpp"
-#include "CPhysics.hpp"
-#include "CEventReceiver.hpp"
-#include "CDebugDraw.hpp"
+#include "framework/CEngine.hpp"
+#include "framework/physics/CPhysics.hpp"
+#include "framework/input/CEventReceiver.hpp"
 
 CEngine engine;
 

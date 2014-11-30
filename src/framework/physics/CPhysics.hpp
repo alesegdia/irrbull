@@ -17,7 +17,7 @@
 #ifndef __CPHYSICS__
 #define __CPHYSICS__
 
-#include "common.h"
+#include "framework/common.h"
 #include "CDebugDraw.hpp"
 
 class CPhysics

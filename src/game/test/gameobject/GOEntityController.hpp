@@ -14,41 +14,26 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __CENTITY__
-#define __CENTITY__
+#ifndef __GOENTITYCONTROLLER__
+#define __GOENTITYCONTROLLER__
 
-#include "common.h"
+#include "framework/common.h"
 
-class GOEntity : public IGameObject
+enum class EState
 {
-	struct _LoadInfo
-	{
-		std::string meshPath;
-		std::string texturePath;
-		btVector3 pos;
-		core::vector3df scale;
-		btCollisionShape* shape;
-		btScalar mass;
-	};
+	IDLE,
+	MOVING,
+	JUMPING
+};
 
-
+class GOEntityController : public IGameObject
+{
 public:
-	typedef struct _LoadInfo LoadInfo;
+	GOEntityController();
+	~GOEntityController();
 
-	GOEntity();
-	virtual ~GOEntity();
-
-	void Load(
-			const std::string& meshPath,
-			const std::string& texturePath,
-			const btVector3& position=btVector3(0,0,0),
-			const core::vector3df& scale=core::vector3df(1,1,1),
-			btCollisionShape* shape=NULL,
-			btScalar  mass=0);
-	scene::IAnimatedMeshSceneNode* GetNode();
-	void AttachCamera(scene::ICameraSceneNode* camNode,
-			const core::vector3df& position);
-	btRigidBody* GetRigidBody();
+	void AttachEntity(GOEntity* entity);
+	void AttachCamera(GOCamera* cam);
 
 	/* GAMEOBJECT INTERFACE */
 	void Awake();
@@ -56,11 +41,11 @@ public:
 	void Update();
 	void Unload();
 
-protected:
-	scene::IAnimatedMesh *_mesh;
-	scene::IAnimatedMeshSceneNode* _node;
-	btRigidBody* _rigidBody;
+private:
+	GOEntity* _attachedEntity;
+	GOCamera* _attachedCamera;
+	EState _state;
+	s32 _prevMouseXDelta;
 };
-
 
 #endif

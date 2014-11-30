@@ -14,8 +14,8 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
-#include "IGameObject.hpp"
-#include "TSingleton.hpp"
+#include "framework/game/gameobject/IGameObject.hpp"
+#include "framework/core/TSingleton.hpp"
 
 /* CORE OBJECTS */
 class CGame;

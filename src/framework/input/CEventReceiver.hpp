@@ -14,12 +14,30 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CGame.hpp"
+#ifndef __CEVENTRECEIVER__
+#define __CEVENTRECEIVER__
 
-int main ()
+#include "framework/common.h"
+
+class CEventReceiver : public IEventReceiver
 {
-	CGame* g = new CGame();
-	g->Run();
+public:
 
-	return 0;
-}
+	CEventReceiver();
+	~CEventReceiver();
+
+	void SetEngine(CEngine* engine);
+	virtual bool OnEvent(const SEvent& event);
+	virtual bool IsKeyDown (EKEY_CODE keyCode) const;
+	s32 GetDeltaMouseX();
+	void SetIrrDevice(IrrlichtDevice* device);
+
+	core::position2di mousePos;
+
+private:
+	bool KeyIsDown[KEY_KEY_CODES_COUNT];
+	IrrlichtDevice* _device;
+	s32 _deltaMouseX;
+};
+
+#endif

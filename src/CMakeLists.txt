@@ -1,17 +1,6 @@
 # Name the sources
-set(SOURCES
-	main.cpp
-	CEngine.cpp
-	CPhysics.cpp
-	CGame.cpp
-	CEventReceiver.cpp
-	CGameObjectManager.cpp
-	GOEntity.cpp
-	GOEntityController.cpp
-	GOIAController.cpp
-	GOCamera.cpp
-	IGameObject.cpp
-	CDebugDraw.hpp)
+file( GLOB_RECURSE SRCs */*.cpp )
+file( GLOB_RECURSE INCs */*.h )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
@@ -24,7 +13,9 @@ find_package(Bullet REQUIRED)
 find_package(aruco REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
-add_executable(irrbull ${SOURCES})
+add_executable(irrbull ${SRCs} ${INCs})
+
+include_directories(.)
 
 if(BOOST_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})

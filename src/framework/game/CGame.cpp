@@ -14,15 +14,15 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CGame.hpp"
-#include "CEngine.hpp"
-#include "CPhysics.hpp"
-#include "CEventReceiver.hpp"
-#include "CGameObjectManager.hpp"
-#include "GOEntity.hpp"
-#include "GOEntityController.hpp"
-#include "GOCamera.hpp"
-#include "GOIAController.hpp"
+#include "framework/game/CGame.hpp"
+#include "framework/CEngine.hpp"
+#include "framework/physics/CPhysics.hpp"
+#include "framework/input/CEventReceiver.hpp"
+#include "framework/game/gameobject/CGameObjectManager.hpp"
+#include "game/test/gameobject/GOEntity.hpp"
+#include "game/test/gameobject/GOEntityController.hpp"
+#include "game/test/gameobject/GOCamera.hpp"
+#include "game/test/gameobject/GOIAController.hpp"
 
 CGame::CGame()
 {

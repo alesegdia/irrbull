@@ -17,7 +17,7 @@
 #ifndef __GOCAMERA__
 #define __GOCAMERA__
 
-#include "common.h"
+#include "framework/common.h"
 
 class GOCamera : public IGameObject
 {

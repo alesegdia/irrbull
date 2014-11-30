@@ -14,30 +14,46 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __CEVENTRECEIVER__
-#define __CEVENTRECEIVER__
+#include "GOCamera.hpp"
+#include "framework/CEngine.hpp"
 
-#include "common.h"
-
-class CEventReceiver : public IEventReceiver
+GOCamera::GOCamera()
 {
-public:
 
-	CEventReceiver();
-	~CEventReceiver();
+}
 
-	void SetEngine(CEngine* engine);
-	virtual bool OnEvent(const SEvent& event);
-	virtual bool IsKeyDown (EKEY_CODE keyCode) const;
-	s32 GetDeltaMouseX();
-	void SetIrrDevice(IrrlichtDevice* device);
+GOCamera::~GOCamera()
+{
 
-	core::position2di mousePos;
+}
 
-private:
-	bool KeyIsDown[KEY_KEY_CODES_COUNT];
-	IrrlichtDevice* _device;
-	s32 _deltaMouseX;
-};
+void GOCamera::LookAt(const core::vector3df& v)
+{
+	_cam->setTarget(v);
+}
 
-#endif
+scene::ISceneNode* GOCamera::GetNode()
+{
+	return _cam;
+}
+
+void GOCamera::Awake()
+{
+	_cam = engine.GetSMgr()->addCameraSceneNode();
+}
+
+void GOCamera::Start()
+{
+
+}
+
+void GOCamera::Update()
+{
+
+}
+
+void GOCamera::Unload()
+{
+
+}
+

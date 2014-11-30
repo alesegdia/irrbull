@@ -17,7 +17,7 @@
 #ifndef __CDEBUGDRAW__
 #define __CDEBUGDRAW__
 
-#include "common.h"
+#include "framework/common.h"
 
 class CDebugDraw : public btIDebugDraw
 {

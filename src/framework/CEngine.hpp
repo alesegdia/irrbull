@@ -14,37 +14,40 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __CGAMEOBJECTMANAGER__
-#define __CGAMEOBJECTMANAGER__
+#ifndef __CENGINE__
+#define __CENGINE__
 
-#include "common.h"
+#include "framework/common.h"
 
-class CGameObjectManager
+// porque sino no cuela, para hacer el forward declaring,
+// tiene que ser un puntero, sino necesita inicializacion en este file.
+#include "framework/input/CEventReceiver.hpp"
+#include "framework/physics/CDebugDraw.hpp"
+
+class CEngine
 {
 public:
-	CGameObjectManager();
-	~CGameObjectManager();
+	CEngine();
+	~CEngine();
 
-	// another param <bool> updatable?
-	// 2 lists, 1 updatable other nothing
-	void RegisterGameObject(IGameObject* go, const std::string& tag);
-	void DeleteGameObjectById(const std::string& tag);
-
-	void Awake();
-	void Start();
-	void Update();
-	void Unload();
-	void FreeEverything();
-
-	template<class T>
-	T* GetGameObjectByTag(const std::string& tag)
-	{
-		return (static_cast<T*>(_gameObjects[tag]));
-	}
+	void Init(int wWidth=800, int wHeight=600);
+	bool IsKeyDown(EKEY_CODE keyCode) const;
+	bool IsRunning() const;
+	scene::ISceneManager* GetSMgr();
+	video::IVideoDriver* GetVideoDriver();
+	IrrlichtDevice* GetIrrDevice();
+	CEventReceiver* GetEventReceiver();
+	CPhysics* GetPhysics();
+	void CleanUp();
 
 private:
-	std::map<std::string, IGameObject*> _gameObjects;
-	CEngine* _engine;
+	IrrlichtDevice* _device;
+	video::IVideoDriver* _driver;
+	CEventReceiver _receiver;
+	CDebugDraw* _debugDraw;
+	CPhysics* _physics;
+	scene::ISceneManager* _smgr;
 };
 
+extern CEngine engine;
 #endif

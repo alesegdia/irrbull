@@ -14,46 +14,37 @@
 //	You should have received a copy of the GNU General Public License
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "GOCamera.hpp"
-#include "CEngine.hpp"
+#ifndef __CGAMEOBJECTMANAGER__
+#define __CGAMEOBJECTMANAGER__
 
-GOCamera::GOCamera()
+#include "framework/common.h"
+
+class CGameObjectManager
 {
+public:
+	CGameObjectManager();
+	~CGameObjectManager();
 
-}
+	// another param <bool> updatable?
+	// 2 lists, 1 updatable other nothing
+	void RegisterGameObject(IGameObject* go, const std::string& tag);
+	void DeleteGameObjectById(const std::string& tag);
 
-GOCamera::~GOCamera()
-{
+	void Awake();
+	void Start();
+	void Update();
+	void Unload();
+	void FreeEverything();
 
-}
+	template<class T>
+	T* GetGameObjectByTag(const std::string& tag)
+	{
+		return (static_cast<T*>(_gameObjects[tag]));
+	}
 
-void GOCamera::LookAt(const core::vector3df& v)
-{
-	_cam->setTarget(v);
-}
+private:
+	std::map<std::string, IGameObject*> _gameObjects;
+	CEngine* _engine;
+};
 
-scene::ISceneNode* GOCamera::GetNode()
-{
-	return _cam;
-}
-
-void GOCamera::Awake()
-{
-	_cam = engine.GetSMgr()->addCameraSceneNode();
-}
-
-void GOCamera::Start()
-{
-
-}
-
-void GOCamera::Update()
-{
-
-}
-
-void GOCamera::Unload()
-{
-
-}
-
+#endif
