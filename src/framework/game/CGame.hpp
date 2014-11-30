@@ -51,7 +51,6 @@ public:
 private:
 	IScreen* currentScreen;
 	scene::ICameraSceneNode* _camNode;
-	scene::ILightSceneNode* _light1;
 };
 
 #endif
