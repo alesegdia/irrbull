@@ -20,8 +20,8 @@ set(Boost_USE_MULTITHREADED OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Irrlicht REQUIRED)
-#find_package(OpenGL REQUIRED)
 find_package(Bullet REQUIRED)
+find_package(aruco REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
 add_executable(irrbull ${SOURCES})
@@ -30,11 +30,6 @@ if(BOOST_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})
 	target_link_libraries(irrbull ${Boost_LIBRARIES})
 endif()
-
-#if(OPENGL_FOUND)
-#	include_directories(${OPENGL_INCLUDE_DIR})
-#	target_link_libraries(irrbull ${OPENGL_LIBRARIES})
-#endif()
 
 if(IRRLICHT_FOUND)
 	include_directories(${IRRLICHT_INCLUDE_DIRS})
