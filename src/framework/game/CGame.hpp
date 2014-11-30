@@ -19,11 +19,18 @@
 
 #include "framework/common.h"
 
+class IScreen;
+
 class CGame
 {
 public:
 	CGame();
 	~CGame();
+
+	void SetScreen( IScreen* screen )
+	{
+		currentScreen = screen;
+	}
 
 	void Init();
 	void SetupScene();
@@ -39,11 +46,12 @@ public:
 			const btVector3& position,
 			const core::vector3df& scale,
 			btScalar mass);
+	CGameObjectManager *_goMgr;
 
 private:
+	IScreen* currentScreen;
 	scene::ICameraSceneNode* _camNode;
 	scene::ILightSceneNode* _light1;
-	CGameObjectManager *_goMgr;
 };
 
 #endif

@@ -15,10 +15,13 @@
 //	along with IrrBull.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "framework/game/CGame.hpp"
+#include "game/test/CGameScreen.hpp"
 
 int main ()
 {
+	CGameScreen* gs = new CGameScreen();
 	CGame* g = new CGame();
+	g->SetScreen(gs);
 	g->Run();
 
 	return 0;
